@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ownedTrips Trip[]
+  memberships TripMember[]
+}
+
+model Trip {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+
+  startDate   DateTime?
+  endDate     DateTime?
+
+  ownerId String
+  owner   User @relation(fields: [ownerId], references: [id])
+
+  members TripMember[]
+  places  Place[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TripMember {
+  id String @id @default(cuid())
+
+  tripId String
+  userId String
+
+  trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  role MemberRole @default(MEMBER)
+
+  joinedAt DateTime @default(now())
+
+  @@unique([tripId, userId])
+}
+
+enum MemberRole {
+  OWNER
+  MEMBER
+}
+
+model Place {
+  id String @id @default(cuid())
+
+  name String
+
+  address String?
+
+  latitude Float
+
+  longitude Float
+
+  notes String?
+
+  visitOrder Int?
+
+  estimatedDuration Int?
+
+  tripId String
+  trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
