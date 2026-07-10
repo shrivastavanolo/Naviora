@@ -1,5 +1,5 @@
 import { requireAuth } from "@/src/lib/require-auth";
-import { createTripSchema } from "@/src/schemas/trip";
+import { updateTripSchema } from "@/src/schemas/trip";
 import { TripService } from "@/src/services/trip.services";
 
 import { NextResponse } from "next/server";
@@ -14,19 +14,18 @@ export async function PATCH(
     const { id } = await params;
     const body = await request.json();
 
-    const data = createTripSchema.parse(body);
+    const data = updateTripSchema.parse(body);
     const trip = await TripService.updateTrip(user.id, id, data);
 
-    const response = NextResponse.json(
+    return NextResponse.json(
       {
         success: true,
         data: trip,
       },
       {
-        status: 200,
+        status: 201,
       }
     );
-    return response;
   } catch (error) {
     const { status, body } = getErrorResponse(error);
 
@@ -41,19 +40,18 @@ export async function GET(
   try {
     const user = await requireAuth();
     const { id } = await params;
-    console.log("tripId", id);
 
     const trip = await TripService.getTrip(user.id, id);
 
-    const response = NextResponse.json(
+    return NextResponse.json(
       {
+        success: true,
         data: trip,
       },
       {
         status: 200,
       }
     );
-    return response;
   } catch (error) {
     const { status, body } = getErrorResponse(error);
 
@@ -69,18 +67,16 @@ export async function DELETE(
     const user = await requireAuth();
     const { id } = await params;
 
-    const trip = await TripService.deleteTrip(user.id, id);
+    await TripService.deleteTrip(user.id, id);
 
-    const response = NextResponse.json(
+    return NextResponse.json(
       {
         success: true,
-        data: trip,
       },
       {
         status: 200,
       }
     );
-    return response;
   } catch (error) {
     const { status, body } = getErrorResponse(error);
 

@@ -1,6 +1,6 @@
 import { NotFoundError, ForbiddenError } from "@/src/lib/errors";
 import { TripRepository } from "@/src/repositories/trip.repository";
-import type { CreateTripInput } from "@/src/schemas/trip";
+import type { CreateTripInput, UpdateTripInput } from "@/src/schemas/trip";
 
 export class TripService {
   static async createTrip(userId: string, data: CreateTripInput) {
@@ -33,7 +33,7 @@ export class TripService {
   static async updateTrip(
     userId: string,
     tripId: string,
-    data: Partial<CreateTripInput>
+    data: UpdateTripInput
   ) {
     const trip = await TripRepository.findById(tripId);
 

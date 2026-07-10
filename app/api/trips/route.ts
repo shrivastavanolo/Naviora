@@ -4,6 +4,7 @@ import { TripService } from "@/src/services/trip.services";
 
 import { NextResponse } from "next/server";
 import { getErrorResponse } from "@/src/lib/error-handler";
+import { success } from "zod";
 
 export async function POST(request: Request) {
   try {
@@ -13,16 +14,15 @@ export async function POST(request: Request) {
     const data = createTripSchema.parse(body);
     const trip = await TripService.createTrip(user.id, data);
 
-    const response = NextResponse.json(
+    return NextResponse.json(
       {
         success: true,
         data: trip,
       },
       {
-        status: 200,
+        status: 201,
       }
     );
-    return response;
   } catch (error) {
     const { status, body } = getErrorResponse(error);
 
@@ -33,17 +33,17 @@ export async function POST(request: Request) {
 export async function GET() {
   try {
     const user = await requireAuth();
-    const trip = await TripService.getMyTrips(user.id);
+    const trips = await TripService.getMyTrips(user.id);
 
-    const response = NextResponse.json(
+    return NextResponse.json(
       {
-        data: trip,
+        success: true,
+        data: trips,
       },
       {
         status: 200,
       }
     );
-    return response;
   } catch (error) {
     const { status, body } = getErrorResponse(error);
 
