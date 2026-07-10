@@ -4,10 +4,12 @@ import { verifyToken } from "./auth";
 import { UserRepository } from "@/src/repositories/user.repository";
 import { UnauthorizedError } from "./errors";
 
+import { AUTH_COOKIE } from "./constants";
+
 export async function requireAuth() {
   const cookieStore = await cookies();
 
-  const token = cookieStore.get("token")?.value;
+  const token = cookieStore.get(AUTH_COOKIE)?.value;
 
   if (!token) {
     throw new UnauthorizedError("Not authenticated");
