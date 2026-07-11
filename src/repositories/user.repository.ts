@@ -1,4 +1,4 @@
-import { prisma } from "@/db/prisma";
+import { prisma } from "@/src/lib/prisma";
 
 export class UserRepository {
   static findByEmail(email: string) {
