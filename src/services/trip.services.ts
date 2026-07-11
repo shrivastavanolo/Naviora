@@ -59,6 +59,6 @@ export class TripService {
       throw new ForbiddenError("Only the trip owner can delete this trip");
     }
 
-    await TripRepository.delete(tripId);
+    return TripRepository.delete(tripId);
   }
 }

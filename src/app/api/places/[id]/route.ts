@@ -1,7 +1,6 @@
 import { requireAuth } from "@/src/lib/require-auth";
 import { updatePlaceSchema } from "@/src/schemas/place";
 import { PlaceService } from "@/src/services/place.services";
-import { TripService } from "@/src/services/trip.services";
 
 import { NextResponse } from "next/server";
 import { getErrorResponse } from "@/src/lib/error-handler";

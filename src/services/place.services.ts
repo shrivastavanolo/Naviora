@@ -69,6 +69,6 @@ export class PlaceService {
   static async deletePlace(userId: string, placeId: string) {
     const place = await this.requirePlace(placeId);
     await this.requireTripAccess(userId, place.tripId);
-    await PlaceRepository.delete(placeId);
+    return PlaceRepository.delete(placeId);
   }
 }
