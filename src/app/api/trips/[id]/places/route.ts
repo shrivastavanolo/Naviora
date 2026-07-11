@@ -1,23 +1,26 @@
 import { requireAuth } from "@/src/lib/require-auth";
-import { createTripSchema } from "@/src/schemas/trip";
-import { TripService } from "@/src/services/trip.services";
+import { createPlaceSchema } from "@/src/schemas/place";
+import { PlaceService } from "@/src/services/place.services";
 
 import { NextResponse } from "next/server";
 import { getErrorResponse } from "@/src/lib/error-handler";
-import { success } from "zod";
 
-export async function POST(request: Request) {
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const user = await requireAuth();
+    const { id: tripId } = await params;
     const body = await request.json();
 
-    const data = createTripSchema.parse(body);
-    const trip = await TripService.createTrip(user.id, data);
+    const data = createPlaceSchema.parse(body);
+    const place = await PlaceService.createPlace(user.id, tripId, data);
 
     return NextResponse.json(
       {
         success: true,
-        data: trip,
+        data: place,
       },
       {
         status: 201,
@@ -30,15 +33,20 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const user = await requireAuth();
-    const trips = await TripService.getMyTrips(user.id);
+    const { id: tripId } = await params;
+
+    const places = await PlaceService.getTripPlaces(user.id, tripId);
 
     return NextResponse.json(
       {
         success: true,
-        data: trips,
+        data: places,
       },
       {
         status: 200,
