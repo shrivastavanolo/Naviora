@@ -25,5 +25,6 @@ export const createTripSchema = tripSchema.refine(
 
 export const updateTripSchema = tripSchema.partial();
 
+export type CreateTripForm = z.input<typeof createTripSchema>;
 export type CreateTripInput = z.infer<typeof createTripSchema>;
 export type UpdateTripInput = z.infer<typeof updateTripSchema>;

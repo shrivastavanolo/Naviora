@@ -3,6 +3,7 @@
 import { useTrips } from "@/hooks/use-trips";
 
 import { TripCard } from "@/components/trip/trip-card";
+import { CreateTripDialog } from "@/components/trip/create-trip-dialog";
 
 export default function DashboardPage() {
   const { data: trips, isPending, error } = useTrips();
@@ -18,7 +19,11 @@ export default function DashboardPage() {
   if (!trips?.length) {
     return (
       <div className="p-8">
-        <h1 className="text-3xl font-bold">Your Trips</h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold">Your Trips</h1>
+
+          <CreateTripDialog />
+        </div>
 
         <p className="mt-4 text-muted-foreground">
           You have not created any trips yet.
