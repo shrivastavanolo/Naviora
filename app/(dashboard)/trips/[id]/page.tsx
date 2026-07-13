@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 
 import { useTrip } from "@/hooks/use-trips";
 import { usePlaces } from "@/hooks/use-places";
+import { CreatePlaceDialog } from "@/components/place/create-place-dialog";
 
 export default function TripPage() {
   const { id } = useParams<{ id: string }>();
@@ -39,6 +40,7 @@ export default function TripPage() {
 
       <section>
         <h2 className="mb-4 text-2xl font-semibold">Places</h2>
+        <CreatePlaceDialog tripId={id}></CreatePlaceDialog>
 
         {!places?.length ? (
           <p className="text-muted-foreground">No places yet.</p>

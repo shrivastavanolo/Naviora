@@ -5,9 +5,9 @@ const placeSchema = z.object({
 
   address: z.string().trim().max(255).optional(),
 
-  latitude: z.coerce.number().min(-90).max(90),
+  latitude: z.number().min(-90).max(90),
 
-  longitude: z.coerce.number().min(-180).max(180),
+  longitude: z.number().min(-180).max(180),
 
   notes: z.string().trim().max(1000).optional(),
 
@@ -20,5 +20,6 @@ export const createPlaceSchema = placeSchema;
 
 export const updatePlaceSchema = placeSchema.partial();
 
+export type CreatePlaceForm = z.input<typeof createPlaceSchema>;
 export type CreatePlaceInput = z.infer<typeof createPlaceSchema>;
 export type UpdatePlaceInput = z.infer<typeof updatePlaceSchema>;
