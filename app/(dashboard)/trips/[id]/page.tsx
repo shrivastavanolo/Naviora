@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import { useTrip } from "@/hooks/use-trips";
 import { usePlaces } from "@/hooks/use-places";
 import { CreatePlaceDialog } from "@/components/place/create-place-dialog";
+import { EditPlaceDialog } from "@/components/place/edit-place-dialog";
+import { DeletePlaceDialog } from "@/components/place/delete-place-dialog";
 
 export default function TripPage() {
   const { id } = useParams<{ id: string }>();
@@ -55,6 +57,12 @@ export default function TripPage() {
                     {place.address}
                   </p>
                 )}
+                <EditPlaceDialog place={place}></EditPlaceDialog>
+                <DeletePlaceDialog
+                  placeId={place.id}
+                  tripId={place.tripId}
+                  placeName={place.name}
+                ></DeletePlaceDialog>
               </div>
             ))}
           </div>
