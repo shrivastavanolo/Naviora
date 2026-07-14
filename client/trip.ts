@@ -1,7 +1,7 @@
 import { api } from "@/lib/api";
 
 import type { Trip } from "@/types/trip";
-import type { CreateTripInput } from "@/src/schemas/trip";
+import type { CreateTripInput, UpdateTripInput } from "@/src/schemas/trip";
 
 export const TripApi = {
   getTrips() {
@@ -16,6 +16,19 @@ export const TripApi = {
     return api<Trip>("/trips", {
       method: "POST",
       body: JSON.stringify(data),
+    });
+  },
+
+  updateTrip(tripId: string, data: UpdateTripInput) {
+    return api<Trip>(`/trips/${tripId}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  },
+
+  deleteTrip(tripId: string) {
+    return api(`/trips/${tripId}`, {
+      method: "DELETE",
     });
   },
 };

@@ -21,7 +21,6 @@ export default function DashboardPage() {
       <div className="p-8">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold">Your Trips</h1>
-
           <CreateTripDialog />
         </div>
 
@@ -35,7 +34,7 @@ export default function DashboardPage() {
   return (
     <main className="mx-auto max-w-5xl p-8">
       <h1 className="mb-6 text-3xl font-bold">Your Trips</h1>
-
+      <CreateTripDialog />
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {trips.map((trip) => (
           <TripCard key={trip.id} trip={trip} />

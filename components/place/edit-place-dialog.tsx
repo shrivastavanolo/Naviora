@@ -153,7 +153,7 @@ export function EditPlaceDialog({ place }: EditPlaceDialogProps) {
             <Input
               type="number"
               {...register("estimatedDuration", {
-                valueAsNumber: true,
+                setValueAs: (v) => (v === "" ? undefined : Number(v)),
               })}
             />
 

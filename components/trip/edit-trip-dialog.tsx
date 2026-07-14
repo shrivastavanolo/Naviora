@@ -6,12 +6,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 import {
-  createTripSchema,
-  type CreateTripFormValues,
-  type CreateTripInput,
+  updateTripSchema,
+  type UpdateTripInput,
+  type UpdateTripFormValues,
 } from "@/src/schemas/trip";
 
-import { useCreateTrip } from "@/hooks/use-trips";
+import { useUpdateTrip } from "@/hooks/use-trips";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,51 +26,73 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-export function CreateTripDialog() {
+interface Trip {
+  id: string;
+  title: string;
+  description: string | null;
+  startDate: string | Date | null;
+  endDate: string | Date | null;
+}
+
+interface Props {
+  trip: Trip;
+}
+
+function formatDate(date: string | Date | null) {
+  if (!date) return undefined;
+
+  return new Date(date).toISOString().split("T")[0];
+}
+
+export function EditTripDialog({ trip }: Props) {
   const [open, setOpen] = useState(false);
 
-  const { mutate, isPending } = useCreateTrip();
+  const { mutate, isPending } = useUpdateTrip();
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
-  } = useForm<CreateTripFormValues, undefined, CreateTripInput>({
-    resolver: zodResolver(createTripSchema),
+  } = useForm<UpdateTripFormValues>({
+    resolver: zodResolver(updateTripSchema),
+
     defaultValues: {
-      title: "",
-      description: "",
-      startDate: undefined,
-      endDate: undefined,
+      title: trip.title,
+      description: trip.description ?? "",
+      startDate: formatDate(trip.startDate),
+      endDate: formatDate(trip.endDate),
     },
   });
 
-  const onSubmit: SubmitHandler<CreateTripInput> = (values) => {
-    mutate(values, {
-      onSuccess: () => {
-        toast.success("Trip created successfully!");
-
-        reset();
-        setOpen(false);
+  const onSubmit: SubmitHandler<UpdateTripInput> = (values) => {
+    mutate(
+      {
+        tripId: trip.id,
+        data: values,
       },
+      {
+        onSuccess: () => {
+          toast.success("Trip updated successfully!");
+          setOpen(false);
+        },
 
-      onError: (error: Error) => {
-        toast.error(error.message);
-      },
-    });
+        onError: (error: Error) => {
+          toast.error(error.message);
+        },
+      }
+    );
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>+ New Trip</DialogTrigger>
+      <DialogTrigger>Edit</DialogTrigger>
 
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Create Trip</DialogTitle>
+          <DialogTitle>Edit Trip</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit as never)} className="space-y-5">
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
 
@@ -122,7 +144,7 @@ export function CreateTripDialog() {
           </div>
 
           <Button type="submit" className="w-full" disabled={isPending}>
-            {isPending ? "Creating..." : "Create Trip"}
+            {isPending ? "Saving..." : "Save Changes"}
           </Button>
         </form>
       </DialogContent>
