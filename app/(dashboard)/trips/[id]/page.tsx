@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 
+import TripMap from "@/components/map/tripmap";
 import { useTrip } from "@/hooks/use-trips";
 import { usePlaces } from "@/hooks/use-places";
 import { CreatePlaceDialog } from "@/components/place/create-place-dialog";
@@ -27,7 +28,7 @@ export default function TripPage() {
     <main className="mx-auto max-w-5xl space-y-8 p-8">
       <section>
         <h1 className="text-4xl font-bold">{trip.title}</h1>
-
+        <TripMap tripId={trip.id} />
         {trip.description && (
           <p className="mt-3 text-muted-foreground">{trip.description}</p>
         )}

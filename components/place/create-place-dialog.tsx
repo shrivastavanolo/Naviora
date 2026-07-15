@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import {
   createPlaceSchema,
   type CreatePlaceInput,
-  CreatePlaceForm,
+  type CreatePlaceForm,
 } from "@/src/schemas/place";
 
 import { useCreatePlace } from "@/hooks/use-places";
@@ -26,11 +26,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-interface CreatePlaceDialogProps {
+import { PlaceSearch } from "./place-search";
+
+interface Props {
   tripId: string;
 }
 
-export function CreatePlaceDialog({ tripId }: CreatePlaceDialogProps) {
+export function CreatePlaceDialog({ tripId }: Props) {
   const [open, setOpen] = useState(false);
 
   const { mutate, isPending } = useCreatePlace(tripId);
@@ -39,14 +41,15 @@ export function CreatePlaceDialog({ tripId }: CreatePlaceDialogProps) {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<CreatePlaceForm>({
     resolver: zodResolver(createPlaceSchema),
     defaultValues: {
       name: "",
       address: "",
-      latitude: undefined,
-      longitude: undefined,
+      latitude: 0,
+      longitude: 0,
       notes: "",
       estimatedDuration: undefined,
     },
@@ -69,20 +72,31 @@ export function CreatePlaceDialog({ tripId }: CreatePlaceDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90">
-        + Add Place
-      </DialogTrigger>
+      <DialogTrigger>+ Add Place</DialogTrigger>
 
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>Add Place</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit as never)} className="space-y-5">
+          <div className="space-y-2">
+            <Label>Search Place</Label>
+
+            <PlaceSearch
+              onSelect={(place) => {
+                setValue("name", place.name);
+                setValue("address", place.address);
+                setValue("latitude", place.latitude);
+                setValue("longitude", place.longitude);
+              }}
+            />
+          </div>
+
           <div className="space-y-2">
             <Label>Name</Label>
 
-            <Input placeholder="Tokyo Tower" {...register("name")} />
+            <Input {...register("name")} />
 
             {errors.name && (
               <p className="text-sm text-red-500">{errors.name.message}</p>
@@ -92,79 +106,43 @@ export function CreatePlaceDialog({ tripId }: CreatePlaceDialogProps) {
           <div className="space-y-2">
             <Label>Address</Label>
 
-            <Input placeholder="Minato City, Tokyo" {...register("address")} />
+            <Input {...register("address")} />
 
             {errors.address && (
               <p className="text-sm text-red-500">{errors.address.message}</p>
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Latitude</Label>
-
-              <Input
-                type="number"
-                step="any"
-                {...register("latitude", {
-                  valueAsNumber: true,
-                })}
-              />
-
-              {errors.latitude && (
-                <p className="text-sm text-red-500">
-                  {errors.latitude.message}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label>Longitude</Label>
-
-              <Input
-                type="number"
-                step="any"
-                {...register("longitude", {
-                  valueAsNumber: true,
-                })}
-              />
-
-              {errors.longitude && (
-                <p className="text-sm text-red-500">
-                  {errors.longitude.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Estimated Duration (minutes)</Label>
-
-            <Input
-              type="number"
-              {...register("estimatedDuration", {
-                setValueAs: (v) => (v === "" ? undefined : Number(v)),
-              })}
-            />
-
-            {errors.estimatedDuration && (
-              <p className="text-sm text-red-500">
-                {errors.estimatedDuration.message}
-              </p>
-            )}
-          </div>
+          <Input
+            type="hidden"
+            {...register("latitude", {
+              valueAsNumber: true,
+            })}
+          />
+          <Input
+            type="hidden"
+            {...register("longitude", {
+              valueAsNumber: true,
+            })}
+          />
 
           <div className="space-y-2">
             <Label>Notes</Label>
 
-            <Textarea
-              placeholder="Best visited during sunset..."
-              {...register("notes")}
-            />
+            <Textarea {...register("notes")} />
+          </div>
 
-            {errors.notes && (
-              <p className="text-sm text-red-500">{errors.notes.message}</p>
-            )}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Estimated Duration (minutes)</Label>
+
+              <Input
+                type="number"
+                {...register("estimatedDuration", {
+                  setValueAs: (v) => (v === "" ? undefined : Number(v)),
+                })}
+              />
+            </div>
           </div>
 
           <Button type="submit" className="w-full" disabled={isPending}>
