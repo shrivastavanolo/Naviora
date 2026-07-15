@@ -1,9 +1,10 @@
 "use client";
 
 import mapboxgl from "mapbox-gl";
-import { useEffect, useRef, useState } from "react";
-import Map, { Marker, Popup } from "react-map-gl/mapbox";
+import { useEffect, useMemo, useRef, useState } from "react";
+import Map, { Layer, Marker, Popup, Source } from "react-map-gl/mapbox";
 import type { MapRef } from "react-map-gl/mapbox";
+import type { Feature, LineString } from "geojson";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 
@@ -19,20 +20,54 @@ export default function TripMap({ tripId }: Props) {
   const { data: places = [], isLoading } = usePlaces(tripId);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
+  const orderedPlaces = useMemo(
+    () => [...places].sort((a, b) => a.visitOrder - b.visitOrder),
+    [places]
+  );
+
+  const center = useMemo(
+    () =>
+      orderedPlaces[0]
+        ? {
+            longitude: orderedPlaces[0].longitude,
+            latitude: orderedPlaces[0].latitude,
+          }
+        : { longitude: 0, latitude: 20 },
+    [orderedPlaces]
+  );
+
+  const routeGeoJSON = useMemo<Feature<LineString> | null>(
+    () =>
+      orderedPlaces.length > 1
+        ? {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "LineString",
+              coordinates: orderedPlaces.map(({ longitude, latitude }) => [
+                longitude,
+                latitude,
+              ]),
+            },
+          }
+        : null,
+    [orderedPlaces]
+  );
+
   useEffect(() => {
-    if (!mapRef.current || places.length === 0) return;
+    if (!mapRef.current || !orderedPlaces.length) return;
 
     const bounds = new mapboxgl.LngLatBounds();
 
-    places.forEach((place) => {
-      bounds.extend([place.longitude, place.latitude]);
-    });
+    orderedPlaces.forEach(({ longitude, latitude }) =>
+      bounds.extend([longitude, latitude])
+    );
 
     mapRef.current.fitBounds(bounds, {
       padding: 80,
       duration: 1000,
     });
-  }, [places]);
+  }, [orderedPlaces]);
 
   if (isLoading) {
     return (
@@ -42,28 +77,30 @@ export default function TripMap({ tripId }: Props) {
     );
   }
 
-  const center = places.length
-    ? {
-        longitude: places[0].longitude,
-        latitude: places[0].latitude,
-      }
-    : {
-        longitude: 0,
-        latitude: 20,
-      };
+  if (!orderedPlaces.length) return null;
 
-  const map = (
+  return (
     <div className="h-[500px] w-full rounded-xl overflow-hidden">
       <Map
         ref={mapRef}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-        initialViewState={{
-          ...center,
-          zoom: 12,
-        }}
+        initialViewState={{ ...center, zoom: 12 }}
         mapStyle="mapbox://styles/mapbox/streets-v12"
       >
-        {places.map((place) => (
+        {routeGeoJSON && (
+          <Source id="trip-route" type="geojson" data={routeGeoJSON}>
+            <Layer
+              id="trip-route-line"
+              type="line"
+              paint={{
+                "line-color": "#6D5EF5",
+                "line-width": 4,
+              }}
+            />
+          </Source>
+        )}
+
+        {orderedPlaces.map((place) => (
           <Marker
             key={place.id}
             longitude={place.longitude}
@@ -88,7 +125,6 @@ export default function TripMap({ tripId }: Props) {
           >
             <div>
               <h3 className="font-semibold">{selectedPlace.name}</h3>
-
               <p>{selectedPlace.address}</p>
             </div>
           </Popup>
@@ -96,5 +132,4 @@ export default function TripMap({ tripId }: Props) {
       </Map>
     </div>
   );
-  return <>{places.length > 0 ? map : null}</>;
 }
