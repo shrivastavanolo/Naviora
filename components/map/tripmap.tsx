@@ -2,9 +2,10 @@
 
 import mapboxgl from "mapbox-gl";
 import { useEffect, useMemo, useRef, useState } from "react";
-import Map, { Layer, Marker, Popup, Source } from "react-map-gl/mapbox";
+import Map, { Marker, Popup, Source, Layer } from "react-map-gl/mapbox";
 import type { MapRef } from "react-map-gl/mapbox";
 import type { Feature, LineString } from "geojson";
+import { useRoute } from "@/hooks/use-route";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 
@@ -36,23 +37,20 @@ export default function TripMap({ tripId }: Props) {
     [orderedPlaces]
   );
 
-  const routeGeoJSON = useMemo<Feature<LineString> | null>(
-    () =>
-      orderedPlaces.length > 1
-        ? {
-            type: "Feature",
-            properties: {},
-            geometry: {
-              type: "LineString",
-              coordinates: orderedPlaces.map(({ longitude, latitude }) => [
-                longitude,
-                latitude,
-              ]),
-            },
-          }
-        : null,
-    [orderedPlaces]
-  );
+  const coordinates = orderedPlaces.map((place) => [
+    place.longitude,
+    place.latitude,
+  ]);
+
+  const { data: route } = useRoute(coordinates);
+
+  const routeGeoJSON: Feature<LineString> | null = route
+    ? {
+        type: "Feature",
+        properties: {},
+        geometry: route.geometry,
+      }
+    : null;
 
   useEffect(() => {
     if (!mapRef.current || !orderedPlaces.length) return;
@@ -78,6 +76,8 @@ export default function TripMap({ tripId }: Props) {
   }
 
   if (!orderedPlaces.length) return null;
+  console.log("route geometry", route?.geometry);
+  console.log("routeGeoJSON", routeGeoJSON);
 
   return (
     <div className="h-[500px] w-full rounded-xl overflow-hidden">
