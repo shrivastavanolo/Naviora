@@ -39,7 +39,7 @@ export function HomeActions() {
         </Button>
       </Link>
       <Link href="/login">
-        <Button variant="outline" size="lg" className="min-w-25">
+        <Button variant="outline" size="lg" className="min-w-30">
           Login
         </Button>
       </Link>
