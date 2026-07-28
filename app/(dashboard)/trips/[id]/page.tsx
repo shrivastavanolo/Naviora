@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useCallback } from "react";
 import {
   DndContext,
@@ -16,7 +16,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical } from "lucide-react";
+import { ArrowLeft, GripVertical } from "lucide-react";
 
 import TripMap from "@/components/map/tripmap";
 import { useTrip } from "@/hooks/use-trips";
@@ -104,6 +104,7 @@ function SortablePlaceCard({
 }
 
 export default function TripPage() {
+  const router = useRouter();
   const { id } = useParams<{ id: string }>();
 
   const { data: trip, isPending: tripLoading } = useTrip(id);
@@ -151,6 +152,15 @@ export default function TripPage() {
   return (
     <main className="mx-auto max-w-5xl space-y-8 p-8">
       <section>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="mb-4 -ml-2"
+          onClick={() => router.push("/dashboard")}
+        >
+          <ArrowLeft className="size-4" />
+          Back to Dashboard
+        </Button>
         <h1 className="text-4xl font-bold">{trip.title}</h1>
         <TripMap tripId={trip.id} />
         {trip.description && (
