@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 
 import { PlaceApi } from "@/client/place";
+import type { Place } from "@/types/place";
 import { CreatePlaceInput, UpdatePlaceInput } from "@/src/schemas/place";
 
 export function usePlaces(tripId: string) {
@@ -63,6 +64,53 @@ export function useDeletePlace(tripId: string) {
       queryClient.invalidateQueries({
         queryKey: ["places", tripId],
       });
+    },
+  });
+}
+
+export function useOptimizeRoute(tripId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => PlaceApi.optimizeRoute(tripId),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["places", tripId],
+      });
+    },
+  });
+}
+
+export function useReorderPlaces(tripId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (orders: { id: string; visitOrder: number }[]) =>
+      PlaceApi.reorderPlaces(tripId, orders),
+
+    onMutate: async (orders) => {
+      await queryClient.cancelQueries({ queryKey: ["places", tripId] });
+      const prev = queryClient.getQueryData<Place[]>(["places", tripId]);
+      if (prev) {
+        const sorted = [...orders].sort((a, b) => a.visitOrder - b.visitOrder);
+        const updated = sorted.map((o) => ({
+          ...(prev.find((p) => p.id === o.id)!),
+          visitOrder: o.visitOrder,
+        }));
+        queryClient.setQueryData(["places", tripId], updated);
+      }
+      return { prev };
+    },
+
+    onError: (_err, _orders, context) => {
+      if (context?.prev) {
+        queryClient.setQueryData(["places", tripId], context.prev);
+      }
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["places", tripId] });
     },
   });
 }

@@ -23,7 +23,16 @@ export async function POST(req: Request) {
 
     const response = await fetch(url);
 
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new Error(`Mapbox API error (${response.status}): ${errorBody}`);
+    }
+
     const data = await response.json();
+
+    if (!data.routes?.length) {
+      throw new Error("Mapbox returned no routes");
+    }
 
     return NextResponse.json({
       geometry: data.routes[0].geometry,

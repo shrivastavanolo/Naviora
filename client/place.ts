@@ -31,4 +31,21 @@ export const PlaceApi = {
       method: "DELETE",
     });
   },
+
+  optimizeRoute(tripId: string) {
+    return api<Place[]>("/routes/optimize", {
+      method: "POST",
+      body: JSON.stringify({ tripId }),
+    });
+  },
+
+  reorderPlaces(
+    tripId: string,
+    orders: { id: string; visitOrder: number }[]
+  ) {
+    return api<Place[]>(`/trips/${tripId}/places/reorder`, {
+      method: "PATCH",
+      body: JSON.stringify({ orders }),
+    });
+  },
 };

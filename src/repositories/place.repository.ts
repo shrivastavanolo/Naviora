@@ -75,6 +75,29 @@ export class PlaceRepository {
     });
   }
 
+  static decrementVisitOrders(tripId: string, fromOrder: number) {
+    return prisma.place.updateMany({
+      where: {
+        tripId,
+        visitOrder: { gt: fromOrder },
+      },
+      data: {
+        visitOrder: { decrement: 1 },
+      },
+    });
+  }
+
+  static reorder(orders: { id: string; visitOrder: number }[]) {
+    return prisma.$transaction(
+      orders.map(({ id, visitOrder }) =>
+        prisma.place.update({
+          where: { id },
+          data: { visitOrder },
+        })
+      )
+    );
+  }
+
   static getNextVisitOrder(tripId: string) {
     return prisma.place.count({
       where: {
