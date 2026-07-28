@@ -3,6 +3,7 @@
 import { useTrips } from "@/hooks/use-trips";
 import { TripCard } from "@/components/trip/trip-card";
 import { CreateTripDialog } from "@/components/trip/create-trip-dialog";
+import LoadingSpinner from "@/components/ui/spinner";
 
 export default function DashboardPage() {
   const { data: trips, isPending, error } = useTrips();
@@ -12,7 +13,7 @@ export default function DashboardPage() {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-3">
           <div className="size-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-          <p className="text-sm text-muted-foreground">Loading trips...</p>
+          <LoadingSpinner />
         </div>
       </div>
     );
@@ -35,7 +36,9 @@ export default function DashboardPage() {
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             {trips?.length
-              ? `You have ${trips.length} trip${trips.length === 1 ? "" : "s"} planned.`
+              ? `You have ${trips.length} trip${
+                  trips.length === 1 ? "" : "s"
+                } planned.`
               : "Plan and organize your next adventure."}
           </p>
         </div>

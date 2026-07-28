@@ -11,6 +11,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 import { usePlaces } from "@/hooks/use-places";
 import type { Place } from "@/types/place";
+import LoadingSpinner from "../ui/spinner";
 
 interface Props {
   tripId: string;
@@ -43,8 +44,7 @@ export default function TripMap({ tripId }: Props) {
   );
 
   const coordinates = useMemo(
-    () =>
-      orderedPlaces.map((place) => [place.longitude, place.latitude]),
+    () => orderedPlaces.map((place) => [place.longitude, place.latitude]),
     [orderedPlaces]
   );
 
@@ -86,17 +86,13 @@ export default function TripMap({ tripId }: Props) {
   }, [orderedPlaces]);
 
   if (isLoading) {
-    return (
-      <div className="h-[500px] flex items-center justify-center">
-        Loading map...
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!orderedPlaces.length) return null;
 
   return (
-    <div className="h-[500px] w-full rounded-xl overflow-hidden">
+    <div className="h-125 w-full rounded-xl overflow-hidden">
       <Map
         key={mapKey}
         ref={mapRef}

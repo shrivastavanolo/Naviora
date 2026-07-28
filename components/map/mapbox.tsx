@@ -39,7 +39,7 @@ export function Map({
     });
 
     mapRef.current.addControl(new mapboxgl.NavigationControl());
-  }, []);
+  }, [latitude, longitude, zoom]);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -56,7 +56,5 @@ export function Map({
     });
   }, [markers]);
 
-  return (
-    <div ref={containerRef} className="h-[500px] w-full rounded-xl border" />
-  );
+  return <div ref={containerRef} className="h-125 w-full rounded-xl border" />;
 }

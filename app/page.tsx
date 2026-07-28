@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { HomeActions } from "@/components/home/home-actions";
 
 export default function Home() {
   return (
@@ -13,16 +12,7 @@ export default function Home() {
             Plan and optimize your trips with interactive maps.
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <Link href="/signup">
-            <Button size="lg">Get Started</Button>
-          </Link>
-          <Link href="/login">
-            <Button variant="outline" size="lg">
-              Login
-            </Button>
-          </Link>
-        </div>
+        <HomeActions />
       </main>
     </div>
   );

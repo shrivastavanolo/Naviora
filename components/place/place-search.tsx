@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { usePlaceSearch } from "@/hooks/use-place-search";
+import LoadingSpinner from "../ui/spinner";
 
 interface Props {
   onSelect(place: {
@@ -27,7 +28,7 @@ export function PlaceSearch({ onSelect }: Props) {
         className="w-full rounded-md border p-2"
       />
 
-      {isLoading && <p>Searching...</p>}
+      {isLoading && <LoadingSpinner />}
 
       <div className="rounded-md border">
         {data?.map((place) => (

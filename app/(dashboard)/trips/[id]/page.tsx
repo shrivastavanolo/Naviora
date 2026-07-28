@@ -20,11 +20,16 @@ import { ArrowLeft, GripVertical } from "lucide-react";
 
 import TripMap from "@/components/map/tripmap";
 import { useTrip } from "@/hooks/use-trips";
-import { usePlaces, useOptimizeRoute, useReorderPlaces } from "@/hooks/use-places";
+import {
+  usePlaces,
+  useOptimizeRoute,
+  useReorderPlaces,
+} from "@/hooks/use-places";
 import { Button } from "@/components/ui/button";
 import { CreatePlaceDialog } from "@/components/place/create-place-dialog";
 import { EditPlaceDialog } from "@/components/place/edit-place-dialog";
 import { DeletePlaceDialog } from "@/components/place/delete-place-dialog";
+import LoadingSpinner from "@/components/ui/spinner";
 
 import type { Place } from "@/types/place";
 
@@ -55,7 +60,9 @@ function SortablePlaceCard({
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center gap-3 rounded-lg border p-4 ${isDragging ? "z-10 opacity-50 shadow-lg" : ""}`}
+      className={`flex items-center gap-3 rounded-lg border p-4 ${
+        isDragging ? "z-10 opacity-50 shadow-lg" : ""
+      }`}
     >
       <button
         {...attributes}
@@ -142,7 +149,7 @@ export default function TripPage() {
   );
 
   if (tripLoading || placesLoading) {
-    return <p className="p-8">Loading...</p>;
+    return <LoadingSpinner />;
   }
 
   if (!trip) {

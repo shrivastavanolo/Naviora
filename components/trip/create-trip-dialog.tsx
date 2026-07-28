@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+
+import type { Trip } from "@/types/trip";
 
 import {
   createTripSchema,
@@ -27,6 +30,7 @@ import {
 } from "@/components/ui/dialog";
 
 export function CreateTripDialog() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   const { mutate, isPending } = useCreateTrip();
@@ -48,11 +52,12 @@ export function CreateTripDialog() {
 
   const onSubmit: SubmitHandler<CreateTripInput> = (values) => {
     mutate(values, {
-      onSuccess: () => {
+      onSuccess: (trip: Trip) => {
         toast.success("Trip created successfully!");
 
         reset();
         setOpen(false);
+        router.push(`/trips/${trip.id}`);
       },
 
       onError: (error: Error) => {
