@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import type { Trip } from "@/types/trip";
+import type { Trip } from "@/src/types/trip";
 
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { EditTripDialog } from "./edit-trip-dialog";

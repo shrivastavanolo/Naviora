@@ -31,7 +31,7 @@ import { EditPlaceDialog } from "@/components/place/edit-place-dialog";
 import { DeletePlaceDialog } from "@/components/place/delete-place-dialog";
 import LoadingSpinner from "@/components/ui/spinner";
 
-import type { Place } from "@/types/place";
+import type { Place } from "@/src/types/place";
 
 function SortablePlaceCard({
   place,

@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 
 import { PlaceApi } from "@/client/place";
-import type { Place } from "@/types/place";
+import type { Place } from "@/src/types/place";
 import { CreatePlaceInput, UpdatePlaceInput } from "@/src/schemas/place";
 
 export function usePlaces(tripId: string) {
@@ -95,7 +95,7 @@ export function useReorderPlaces(tripId: string) {
       if (prev) {
         const sorted = [...orders].sort((a, b) => a.visitOrder - b.visitOrder);
         const updated = sorted.map((o) => ({
-          ...(prev.find((p) => p.id === o.id)!),
+          ...prev.find((p) => p.id === o.id)!,
           visitOrder: o.visitOrder,
         }));
         queryClient.setQueryData(["places", tripId], updated);

@@ -6,7 +6,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
-import type { Trip } from "@/types/trip";
+import type { Trip } from "@/src/types/trip";
 
 import {
   createTripSchema,

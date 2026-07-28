@@ -1,6 +1,6 @@
 import { api } from "@/lib/api";
 
-import type { Trip } from "@/types/trip";
+import type { Trip } from "@/src/types/trip";
 import type { CreateTripInput, UpdateTripInput } from "@/src/schemas/trip";
 
 export const TripApi = {

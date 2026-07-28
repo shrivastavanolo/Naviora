@@ -1,6 +1,6 @@
 import { api } from "@/lib/api";
 
-import type { Place } from "@/types/place";
+import type { Place } from "@/src/types/place";
 import type { CreatePlaceInput, UpdatePlaceInput } from "@/src/schemas/place";
 
 export const PlaceApi = {
@@ -39,10 +39,7 @@ export const PlaceApi = {
     });
   },
 
-  reorderPlaces(
-    tripId: string,
-    orders: { id: string; visitOrder: number }[]
-  ) {
+  reorderPlaces(tripId: string, orders: { id: string; visitOrder: number }[]) {
     return api<Place[]>(`/trips/${tripId}/places/reorder`, {
       method: "PATCH",
       body: JSON.stringify({ orders }),

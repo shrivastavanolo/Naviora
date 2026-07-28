@@ -1,6 +1,6 @@
 import { api } from "@/lib/api";
 import type { SignupInput, LoginInput } from "@/src/schemas/auth";
-import type { User } from "@/types/user";
+import type { User } from "@/src/types/user";
 
 export const AuthApi = {
   signup(data: SignupInput) {

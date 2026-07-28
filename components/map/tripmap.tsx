@@ -10,7 +10,7 @@ import { useRoute } from "@/hooks/use-route";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 import { usePlaces } from "@/hooks/use-places";
-import type { Place } from "@/types/place";
+import type { Place } from "@/src/types/place";
 import LoadingSpinner from "../ui/spinner";
 
 interface Props {
