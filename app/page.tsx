@@ -1,18 +1,29 @@
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
+    <div className="flex flex-1 items-center justify-center bg-background font-sans">
+      <main className="flex w-full max-w-3xl flex-1 flex-col items-center justify-center gap-8 px-16 text-center sm:items-start sm:text-left">
+        <div className="flex flex-col items-center gap-4 sm:items-start">
+          <h1 className="max-w-xs text-4xl font-bold tracking-tight text-foreground">
             Naviora
           </h1>
+          <p className="max-w-sm text-muted-foreground">
+            Plan and optimize your trips with interactive maps.
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Link href="/signup">
+            <Button size="lg">Get Started</Button>
+          </Link>
+          <Link href="/login">
+            <Button variant="outline" size="lg">
+              Login
+            </Button>
+          </Link>
         </div>
       </main>
     </div>
   );
 }
-
-export const metadata = {
-  title: "Naviora",
-  description: "Naviora is a navigation app that helps you find your way.",
-};

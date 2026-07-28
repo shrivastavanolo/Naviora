@@ -102,7 +102,7 @@ export default function TripMap({ tripId }: Props) {
         ref={mapRef}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
         initialViewState={{ ...center, zoom: 12 }}
-        mapStyle="mapbox://styles/mapbox/streets-v12"
+        mapStyle="mapbox://styles/mapbox/dark-v11"
       >
         {routeGeoJSON && (
           <Source id="trip-route" type="geojson" data={routeGeoJSON}>
@@ -145,11 +145,7 @@ export default function TripMap({ tripId }: Props) {
         {orderedPlaces.map((place, index) => {
           const isFirst = index === 0;
           const isLast = index === orderedPlaces.length - 1;
-          const bgColor = isFirst
-            ? "bg-green-600"
-            : isLast
-              ? "bg-red-600"
-              : "bg-purple-600";
+          const bgColor = isFirst ? "#34D399" : isLast ? "#EF4444" : "#6D5EF5";
 
           return (
             <Marker
@@ -163,11 +159,12 @@ export default function TripMap({ tripId }: Props) {
                 className="flex flex-col items-center cursor-pointer"
               >
                 <div
-                  className={`flex items-center justify-center w-8 h-8 rounded-full ${bgColor} text-white text-sm font-bold shadow-md border-2 border-white`}
+                  className="flex items-center justify-center w-8 h-8 rounded-full text-white text-sm font-bold shadow-md border-2 border-white"
+                  style={{ backgroundColor: bgColor }}
                 >
                   {place.visitOrder}
                 </div>
-                <span className="mt-0.5 px-1.5 py-0.5 bg-white/90 rounded text-xs font-medium shadow-sm text-nowrap">
+                <span className="mt-0.5 px-1.5 py-0.5 bg-[#20243A]/90 rounded text-xs font-medium shadow-sm text-nowrap text-[#F8FAFC]">
                   {place.name}
                 </span>
               </button>

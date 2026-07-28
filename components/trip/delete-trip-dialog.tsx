@@ -42,9 +42,7 @@ export function DeleteTripDialog({ tripId, title }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="rounded-md border border-red-500 px-3 py-2 text-red-500">
-        Delete
-      </DialogTrigger>
+      <DialogTrigger render={<Button variant="ghost" size="xs" />}>Delete</DialogTrigger>
 
       <DialogContent>
         <DialogHeader>

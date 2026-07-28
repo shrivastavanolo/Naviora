@@ -85,7 +85,7 @@ export function EditTripDialog({ trip }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>Edit</DialogTrigger>
+      <DialogTrigger render={<Button variant="ghost" size="xs" />}>Edit</DialogTrigger>
 
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>

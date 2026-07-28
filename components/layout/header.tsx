@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/query-client";
@@ -22,12 +23,15 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-        <Link
-          href="/"
-          className="text-lg font-bold tracking-tight hover:text-primary transition-colors"
-        >
-          Naviora
+      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/logo.svg"
+            alt="Naviora"
+            width={120}
+            height={120}
+            priority
+          />
         </Link>
 
         <nav className="flex items-center gap-2">
@@ -61,10 +65,7 @@ export function Header() {
               >
                 Login
               </Button>
-              <Button
-                size="sm"
-                onClick={() => router.push("/signup")}
-              >
+              <Button size="sm" onClick={() => router.push("/signup")}>
                 Sign Up
               </Button>
             </>
