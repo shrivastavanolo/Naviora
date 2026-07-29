@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Search } from "lucide-react";
 
 import { useTrips } from "@/hooks/use-trips";
@@ -11,7 +11,16 @@ import { Input } from "@/components/ui/input";
 import LoadingSpinner from "@/components/ui/spinner";
 
 export default function DashboardPage() {
+  const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  useEffect(() => {
+    debounceRef.current = setTimeout(() => {
+      setSearchQuery(searchInput);
+    }, 300);
+    return () => clearTimeout(debounceRef.current);
+  }, [searchInput]);
 
   const {
     data,
@@ -20,23 +29,13 @@ export default function DashboardPage() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useTrips();
+  } = useTrips(searchQuery || undefined);
 
   const allTrips = useMemo(
     () => data?.pages.flatMap((p) => p.trips) ?? [],
     [data]
   );
   const total = data?.pages[0]?.total ?? 0;
-
-  const filteredTrips = useMemo(
-    () =>
-      searchQuery
-        ? allTrips.filter((t) =>
-            t.title.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-        : allTrips,
-    [allTrips, searchQuery]
-  );
 
   if (isPending) {
     return <LoadingSpinner />;
@@ -69,8 +68,8 @@ export default function DashboardPage() {
             <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search trips..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               className="h-9 w-48 pl-9 text-sm"
             />
           </div>
@@ -93,12 +92,12 @@ export default function DashboardPage() {
       ) : (
         <>
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {filteredTrips.map((trip) => (
+            {allTrips.map((trip) => (
               <TripCard key={trip.id} trip={trip} />
             ))}
           </div>
 
-          {searchQuery && !filteredTrips.length && (
+          {searchQuery && !allTrips.length && (
             <div className="flex flex-col items-center py-16">
               <img
                 src="/assets/illustrations/empty-search.svg"

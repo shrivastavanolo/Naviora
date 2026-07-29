@@ -4,10 +4,14 @@ import type { PaginatedTrips, Trip } from "@/src/types/trip";
 import type { CreateTripInput, UpdateTripInput } from "@/src/schemas/trip";
 
 export const TripApi = {
-  getTrips(params?: { page?: number; limit?: number }) {
-    const query = params
-      ? `?${new URLSearchParams({ page: String(params.page ?? 1), limit: String(params.limit ?? 9) })}`
-      : "";
+  getTrips(params?: { page?: number; limit?: number; q?: string }) {
+    const search = new URLSearchParams();
+    if (params) {
+      search.set("page", String(params.page ?? 1));
+      search.set("limit", String(params.limit ?? 9));
+      if (params.q) search.set("q", params.q);
+    }
+    const query = search.toString() ? `?${search.toString()}` : "";
     return api<PaginatedTrips>(`/trips${query}`);
   },
 

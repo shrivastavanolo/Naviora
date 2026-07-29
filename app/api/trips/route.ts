@@ -106,8 +106,9 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
     const limit = Math.min(50, Math.max(1, parseInt(searchParams.get("limit") ?? "9", 10)));
+    const q = searchParams.get("q")?.trim() || undefined;
 
-    const result = await TripService.getMyTrips(user.id, page, limit);
+    const result = await TripService.getMyTrips(user.id, page, limit, q);
 
     return NextResponse.json(
       {

@@ -39,10 +39,10 @@ export class TripService {
     return trip;
   }
 
-  static async getMyTrips(userId: string, page = 1, limit = 9) {
+  static async getMyTrips(userId: string, page = 1, limit = 9, q?: string) {
     const [trips, total] = await Promise.all([
-      TripRepository.findManyByUser(userId, page, limit),
-      TripRepository.countByUser(userId),
+      TripRepository.findManyByUser(userId, page, limit, q),
+      TripRepository.countByUser(userId, q),
     ]);
 
     return {

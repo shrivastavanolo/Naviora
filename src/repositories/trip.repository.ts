@@ -56,7 +56,7 @@ export class TripRepository {
     });
   }
 
-  static findManyByUser(userId: string, page = 1, limit = 9) {
+  static findManyByUser(userId: string, page = 1, limit = 9, q?: string) {
     return prisma.trip.findMany({
       where: {
         members: {
@@ -64,6 +64,7 @@ export class TripRepository {
             userId,
           },
         },
+        ...(q ? { title: { contains: q, mode: "insensitive" as const } } : {}),
       },
 
       orderBy: {
@@ -75,7 +76,7 @@ export class TripRepository {
     });
   }
 
-  static countByUser(userId: string) {
+  static countByUser(userId: string, q?: string) {
     return prisma.trip.count({
       where: {
         members: {
@@ -83,6 +84,7 @@ export class TripRepository {
             userId,
           },
         },
+        ...(q ? { title: { contains: q, mode: "insensitive" as const } } : {}),
       },
     });
   }

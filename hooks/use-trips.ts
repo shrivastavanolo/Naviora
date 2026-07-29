@@ -4,10 +4,10 @@ import { TripApi } from "@/client/trip";
 import { UpdateTripInput } from "@/src/schemas/trip";
 import type { PaginatedTrips } from "@/src/types/trip";
 
-export function useTrips(limit = 9) {
+export function useTrips(q?: string, limit = 9) {
   return useInfiniteQuery({
-    queryKey: ["trips", { limit }],
-    queryFn: ({ pageParam }) => TripApi.getTrips({ page: pageParam, limit }),
+    queryKey: ["trips", { limit, q }],
+    queryFn: ({ pageParam }) => TripApi.getTrips({ page: pageParam, limit, q }),
     initialPageParam: 1,
     getNextPageParam: (lastPage: PaginatedTrips) => {
       if (lastPage.page < lastPage.totalPages) {
