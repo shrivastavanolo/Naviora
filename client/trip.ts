@@ -1,11 +1,14 @@
 import { api } from "@/lib/api";
 
-import type { Trip } from "@/src/types/trip";
+import type { PaginatedTrips, Trip } from "@/src/types/trip";
 import type { CreateTripInput, UpdateTripInput } from "@/src/schemas/trip";
 
 export const TripApi = {
-  getTrips() {
-    return api<Trip[]>("/trips");
+  getTrips(params?: { page?: number; limit?: number }) {
+    const query = params
+      ? `?${new URLSearchParams({ page: String(params.page ?? 1), limit: String(params.limit ?? 9) })}`
+      : "";
+    return api<PaginatedTrips>(`/trips${query}`);
   },
 
   getTrip(id: string) {

@@ -100,15 +100,19 @@ export async function POST(request: Request) {
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const user = await requireAuth();
-    const trips = await TripService.getMyTrips(user.id);
+    const { searchParams } = new URL(request.url);
+    const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
+    const limit = Math.min(50, Math.max(1, parseInt(searchParams.get("limit") ?? "9", 10)));
+
+    const result = await TripService.getMyTrips(user.id, page, limit);
 
     return NextResponse.json(
       {
         success: true,
-        data: trips,
+        data: result,
       },
       {
         status: 200,

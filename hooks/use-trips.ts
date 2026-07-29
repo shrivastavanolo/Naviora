@@ -1,12 +1,21 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { TripApi } from "@/client/trip";
 import { UpdateTripInput } from "@/src/schemas/trip";
+import type { PaginatedTrips } from "@/src/types/trip";
 
-export function useTrips() {
-  return useQuery({
-    queryKey: ["trips"],
-    queryFn: TripApi.getTrips,
+export function useTrips(limit = 9) {
+  return useInfiniteQuery({
+    queryKey: ["trips", { limit }],
+    queryFn: ({ pageParam }) => TripApi.getTrips({ page: pageParam, limit }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage: PaginatedTrips) => {
+      if (lastPage.page < lastPage.totalPages) {
+        return lastPage.page + 1;
+      }
+      return undefined;
+    },
+    placeholderData: (previousData) => previousData,
   });
 }
 

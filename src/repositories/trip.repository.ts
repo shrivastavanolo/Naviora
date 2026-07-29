@@ -56,7 +56,7 @@ export class TripRepository {
     });
   }
 
-  static findManyByUser(userId: string) {
+  static findManyByUser(userId: string, page = 1, limit = 9) {
     return prisma.trip.findMany({
       where: {
         members: {
@@ -68,6 +68,21 @@ export class TripRepository {
 
       orderBy: {
         createdAt: "desc",
+      },
+
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+  }
+
+  static countByUser(userId: string) {
+    return prisma.trip.count({
+      where: {
+        members: {
+          some: {
+            userId,
+          },
+        },
       },
     });
   }

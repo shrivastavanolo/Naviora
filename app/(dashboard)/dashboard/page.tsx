@@ -3,10 +3,21 @@
 import { useTrips } from "@/hooks/use-trips";
 import { TripCard } from "@/components/trip/trip-card";
 import { CreateTripDialog } from "@/components/trip/create-trip-dialog";
+import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/ui/spinner";
 
 export default function DashboardPage() {
-  const { data: trips, isPending, error } = useTrips();
+  const {
+    data,
+    isPending,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useTrips();
+
+  const allTrips = data?.pages.flatMap((p) => p.trips) ?? [];
+  const total = data?.pages[0]?.total ?? 0;
 
   if (isPending) {
     return <LoadingSpinner />;
@@ -28,17 +39,15 @@ export default function DashboardPage() {
             Your Trips
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {trips?.length
-              ? `You have ${trips.length} trip${
-                  trips.length === 1 ? "" : "s"
-                } planned.`
+            {total
+              ? `You have ${total} trip${total === 1 ? "" : "s"} planned.`
               : "Plan and organize your next adventure."}
           </p>
         </div>
         <CreateTripDialog />
       </div>
 
-      {!trips?.length ? (
+      {!allTrips.length ? (
         <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border px-6 py-20">
           <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-primary/10">
             <svg
@@ -62,9 +71,21 @@ export default function DashboardPage() {
         </div>
       ) : (
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {trips.map((trip) => (
+          {allTrips.map((trip) => (
             <TripCard key={trip.id} trip={trip} />
           ))}
+        </div>
+      )}
+
+      {hasNextPage && (
+        <div className="flex justify-center pt-4">
+          <Button
+            variant="outline"
+            onClick={() => fetchNextPage()}
+            disabled={isFetchingNextPage}
+          >
+            {isFetchingNextPage ? "Loading..." : "Load More"}
+          </Button>
         </div>
       )}
     </div>

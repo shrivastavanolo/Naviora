@@ -38,8 +38,19 @@ export class TripService {
     return trip;
   }
 
-  static async getMyTrips(userId: string) {
-    return TripRepository.findManyByUser(userId);
+  static async getMyTrips(userId: string, page = 1, limit = 9) {
+    const [trips, total] = await Promise.all([
+      TripRepository.findManyByUser(userId, page, limit),
+      TripRepository.countByUser(userId),
+    ]);
+
+    return {
+      trips,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   static async updateTrip(

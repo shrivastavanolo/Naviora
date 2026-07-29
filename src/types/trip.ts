@@ -29,3 +29,11 @@ export interface Trip {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface PaginatedTrips {
+  trips: Trip[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
