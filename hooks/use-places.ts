@@ -20,6 +20,11 @@ export function usePlace(id: string) {
   });
 }
 
+function invalidatePlaceQueries(queryClient: ReturnType<typeof useQueryClient>, tripId: string) {
+  queryClient.invalidateQueries({ queryKey: ["places", tripId] });
+  queryClient.invalidateQueries({ queryKey: ["trip-days", tripId] });
+}
+
 export function useCreatePlace(tripId: string) {
   const queryClient = useQueryClient();
 
@@ -27,9 +32,7 @@ export function useCreatePlace(tripId: string) {
     mutationFn: (data: CreatePlaceInput) => PlaceApi.createPlace(tripId, data),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["places", tripId],
-      });
+      invalidatePlaceQueries(queryClient, tripId);
     },
   });
 }
@@ -47,9 +50,7 @@ export function useUpdatePlace(tripId: string) {
     }) => PlaceApi.updatePlace(placeId, data),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["places", tripId],
-      });
+      invalidatePlaceQueries(queryClient, tripId);
     },
   });
 }
@@ -61,33 +62,29 @@ export function useDeletePlace(tripId: string) {
     mutationFn: (placeId: string) => PlaceApi.deletePlace(placeId),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["places", tripId],
-      });
+      invalidatePlaceQueries(queryClient, tripId);
     },
   });
 }
 
-export function useOptimizeRoute(tripId: string) {
+export function useOptimizeRoute(tripId: string, dayId?: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => PlaceApi.optimizeRoute(tripId),
+    mutationFn: () => PlaceApi.optimizeRoute(tripId, dayId),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["places", tripId],
-      });
+      invalidatePlaceQueries(queryClient, tripId);
     },
   });
 }
 
-export function useReorderPlaces(tripId: string) {
+export function useReorderPlaces(tripId: string, dayId?: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (orders: { id: string; visitOrder: number }[]) =>
-      PlaceApi.reorderPlaces(tripId, orders),
+      PlaceApi.reorderPlaces(tripId, orders, dayId),
 
     onMutate: async (orders) => {
       await queryClient.cancelQueries({ queryKey: ["places", tripId] });
@@ -110,7 +107,7 @@ export function useReorderPlaces(tripId: string) {
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["places", tripId] });
+      invalidatePlaceQueries(queryClient, tripId);
     },
   });
 }

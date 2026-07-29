@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { TripService } from "@/src/services/trip.services";
 import { TripRepository } from "@/src/repositories/trip.repository";
+import { TripDayRepository } from "@/src/repositories/trip-day.repository";
 import { ForbiddenError, NotFoundError } from "@/src/lib/errors";
 
 vi.mock("@/src/repositories/trip.repository", () => ({
@@ -11,6 +12,12 @@ vi.mock("@/src/repositories/trip.repository", () => ({
     findManyByUser: vi.fn(),
     update: vi.fn(),
     delete: vi.fn(),
+  },
+}));
+
+vi.mock("@/src/repositories/trip-day.repository", () => ({
+  TripDayRepository: {
+    create: vi.fn(),
   },
 }));
 
@@ -36,7 +43,7 @@ const makeTrip = (overrides = {}) => ({
 
 describe("TripService", () => {
   describe("createTrip", () => {
-    it("should create a trip for the authenticated user", async () => {
+    it("should create a trip with Day 1", async () => {
       const input = {
         title: "Japan",
         description: "Vacation",
@@ -48,6 +55,13 @@ describe("TripService", () => {
         createdTrip as never
       );
 
+      vi.spyOn(TripDayRepository, "create").mockResolvedValue({
+        id: "day-1",
+        dayNumber: 1,
+        title: "Day 1",
+        tripId: "trip-1",
+      } as never);
+
       const result = await TripService.createTrip("user-1", input);
 
       expect(TripRepository.create).toHaveBeenCalledOnce();
@@ -55,6 +69,12 @@ describe("TripService", () => {
       expect(TripRepository.create).toHaveBeenCalledWith({
         ...input,
         ownerId: "user-1",
+      });
+
+      expect(TripDayRepository.create).toHaveBeenCalledWith({
+        dayNumber: 1,
+        title: "Day 1",
+        tripId: "trip-1",
       });
 
       expect(result).toEqual(createdTrip);

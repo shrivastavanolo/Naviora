@@ -45,9 +45,21 @@ model Trip {
 
   members TripMember[]
   places  Place[]
+  days    TripDay[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model TripDay {
+  id        String @id @default(cuid())
+  dayNumber Int
+  title     String?
+  tripId    String
+  trip      Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  places    Place[]
+
+  @@unique([tripId, dayNumber])
 }
 
 model TripMember {
@@ -90,6 +102,9 @@ model Place {
 
   tripId String
   trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  dayId String?
+  day   TripDay? @relation(fields: [dayId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

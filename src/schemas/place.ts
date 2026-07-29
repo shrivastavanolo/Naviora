@@ -14,6 +14,8 @@ const placeSchema = z.object({
   estimatedDuration: z.number().int().positive().optional(),
 
   visitOrder: z.number().int().positive().optional(),
+
+  dayId: z.string().nullable().optional(),
 });
 
 export const createPlaceSchema = placeSchema;

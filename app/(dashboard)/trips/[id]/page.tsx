@@ -2,153 +2,50 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useCallback } from "react";
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from "@dnd-kit/core";
-import {
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { ArrowLeft, GripVertical } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 import TripMap from "@/components/map/tripmap";
+import DayTabs from "@/components/trip/day-tabs";
+import DayPanel from "@/components/trip/day-panel";
 import { useTrip } from "@/hooks/use-trips";
-import {
-  usePlaces,
-  useOptimizeRoute,
-  useReorderPlaces,
-} from "@/hooks/use-places";
+import { useOptimizeRoute, useReorderPlaces } from "@/hooks/use-places";
+import { useDays, useCreateDay } from "@/hooks/use-trip-days";
 import { Button } from "@/components/ui/button";
 import { CreatePlaceDialog } from "@/components/place/create-place-dialog";
-import { EditPlaceDialog } from "@/components/place/edit-place-dialog";
-import { DeletePlaceDialog } from "@/components/place/delete-place-dialog";
 import LoadingSpinner from "@/components/ui/spinner";
-
-import type { Place } from "@/src/types/place";
-
-function SortablePlaceCard({
-  place,
-  isStart,
-  isEnd,
-}: {
-  place: Place;
-  isStart: boolean;
-  isEnd: boolean;
-}) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: place.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className={`flex items-center gap-3 rounded-lg border p-4 ${
-        isDragging ? "z-10 opacity-50 shadow-lg" : ""
-      }`}
-    >
-      <button
-        {...attributes}
-        {...listeners}
-        className="touch-none text-muted-foreground hover:text-foreground cursor-grab active:cursor-grabbing"
-        aria-label="Drag to reorder"
-      >
-        <GripVertical className="size-5" />
-      </button>
-
-      <div className="flex min-w-0 flex-1 flex-col">
-        <div className="flex items-center gap-2">
-          <h3 className="font-medium">{place.name}</h3>
-          {isStart && (
-            <span className="rounded bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900 dark:text-green-300">
-              Start
-            </span>
-          )}
-          {isEnd && (
-            <span className="rounded bg-red-100 px-1.5 py-0.5 text-xs font-medium text-red-700 dark:bg-red-900 dark:text-red-300">
-              End
-            </span>
-          )}
-        </div>
-
-        {place.address && (
-          <p className="mt-0.5 truncate text-sm text-muted-foreground">
-            {place.address}
-          </p>
-        )}
-      </div>
-
-      <div className="flex shrink-0 items-center gap-1">
-        <span className="mr-1 text-xs text-muted-foreground">
-          #{place.visitOrder}
-        </span>
-        <EditPlaceDialog place={place} />
-        <DeletePlaceDialog
-          placeId={place.id}
-          tripId={place.tripId}
-          placeName={place.name}
-        />
-      </div>
-    </div>
-  );
-}
+import { useState } from "react";
 
 export default function TripPage() {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
 
   const { data: trip, isPending: tripLoading } = useTrip(id);
+  const { data: days = [], isPending: daysLoading } = useDays(id);
+  const createDayMutation = useCreateDay(id);
 
-  const { data: places = [], isPending: placesLoading } = usePlaces(id);
+  const [activeDayId, setActiveDayId] = useState<string | null>(null);
 
-  const optimizeMutation = useOptimizeRoute(id);
-  const reorderMutation = useReorderPlaces(id);
+  const activeDay = days.find((d) => d.id === activeDayId) ?? days[0] ?? null;
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
-  );
+  const optimizeMutation = useOptimizeRoute(id, activeDay?.id);
+  const reorderMutation = useReorderPlaces(id, activeDay?.id);
 
-  const handleDragEnd = useCallback(
-    (event: DragEndEvent) => {
-      const { active, over } = event;
-      if (!over || active.id === over.id) return;
-
-      const oldIndex = places.findIndex((p) => p.id === active.id);
-      const newIndex = places.findIndex((p) => p.id === over.id);
-      if (oldIndex === -1 || newIndex === -1) return;
-
-      const reordered = [...places];
-      const [moved] = reordered.splice(oldIndex, 1);
-      reordered.splice(newIndex, 0, moved);
-
-      const orders = reordered.map((p, i) => ({
-        id: p.id,
-        visitOrder: i + 1,
-      }));
-
+  const handleReorder = useCallback(
+    (orders: { id: string; visitOrder: number }[]) => {
       reorderMutation.mutate(orders);
     },
-    [places, reorderMutation]
+    [reorderMutation]
   );
 
-  if (tripLoading || placesLoading) {
+  const handleAddDay = useCallback(() => {
+    createDayMutation.mutate(undefined, {
+      onSuccess: (newDay) => {
+        setActiveDayId(newDay.id);
+      },
+    });
+  }, [createDayMutation]);
+
+  if (tripLoading || daysLoading) {
     return <LoadingSpinner />;
   }
 
@@ -169,7 +66,7 @@ export default function TripPage() {
           Back to Dashboard
         </Button>
         <h1 className="text-4xl font-bold">{trip.title}</h1>
-        <TripMap tripId={trip.id} />
+        <TripMap tripId={trip.id} places={activeDay?.places ?? []} />
         {trip.description && (
           <p className="mt-3 text-muted-foreground">{trip.description}</p>
         )}
@@ -183,46 +80,52 @@ export default function TripPage() {
       </section>
 
       <section>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-2xl font-semibold">Places</h2>
-          <div className="flex items-center gap-2">
-            <Button
-              size="sm"
-              disabled={!places.length || optimizeMutation.isPending}
-              onClick={() => optimizeMutation.mutate()}
-            >
-              {optimizeMutation.isPending ? "Optimizing..." : "Optimize"}
-            </Button>
-            <CreatePlaceDialog tripId={id} />
-          </div>
-        </div>
-
-        {!places.length ? (
-          <p className="text-muted-foreground">No places yet.</p>
-        ) : (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={places.map((p) => p.id)}
-              strategy={verticalListSortingStrategy}
-            >
-              <div className="space-y-3">
-                {places.map((place, index) => (
-                  <SortablePlaceCard
-                    key={place.id}
-                    place={place}
-                    isStart={index === 0}
-                    isEnd={index === places.length - 1}
-                  />
-                ))}
-              </div>
-            </SortableContext>
-          </DndContext>
-        )}
+        <DayTabs
+          days={days}
+          activeDayId={activeDay?.id ?? null}
+          onDayChange={setActiveDayId}
+          onAddDay={handleAddDay}
+          isAdding={createDayMutation.isPending}
+        />
       </section>
+
+      {activeDay ? (
+        <section>
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-2xl font-semibold">
+              {activeDay.title ?? `Day ${activeDay.dayNumber}`}
+            </h2>
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                disabled={!activeDay.places.length || optimizeMutation.isPending}
+                onClick={() => optimizeMutation.mutate()}
+              >
+                {optimizeMutation.isPending ? "Optimizing..." : "Optimize"}
+              </Button>
+              <CreatePlaceDialog tripId={id} dayId={activeDay.id} />
+            </div>
+          </div>
+
+          <DayPanel
+            places={activeDay.places}
+            onReorder={handleReorder}
+          />
+        </section>
+      ) : (
+        <section className="py-12 text-center">
+          <p className="text-muted-foreground">
+            No days yet. Add a day to get started.
+          </p>
+          <Button
+            className="mt-4"
+            onClick={handleAddDay}
+            disabled={createDayMutation.isPending}
+          >
+            {createDayMutation.isPending ? "Adding..." : "Add Day"}
+          </Button>
+        </section>
+      )}
     </main>
   );
 }

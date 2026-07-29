@@ -10,9 +10,12 @@ vi.mock("@/src/repositories/place.repository", () => ({
     create: vi.fn(),
     findById: vi.fn(),
     findManyByTrip: vi.fn(),
+    findManyByDay: vi.fn(),
     update: vi.fn(),
     delete: vi.fn(),
+    decrementVisitOrders: vi.fn(),
     getNextVisitOrder: vi.fn(),
+    reorder: vi.fn(),
   },
 }));
 
@@ -80,7 +83,7 @@ describe("PlaceService", () => {
 
       const result = await PlaceService.createPlace("user-1", "trip-1", input);
 
-      expect(PlaceRepository.getNextVisitOrder).toHaveBeenCalledWith("trip-1");
+      expect(PlaceRepository.getNextVisitOrder).toHaveBeenCalledWith("trip-1", undefined);
 
       expect(PlaceRepository.create).toHaveBeenCalledWith({
         ...input,

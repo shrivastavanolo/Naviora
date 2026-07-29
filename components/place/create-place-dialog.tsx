@@ -30,9 +30,10 @@ import { PlaceSearch } from "./place-search";
 
 interface Props {
   tripId: string;
+  dayId?: string;
 }
 
-export function CreatePlaceDialog({ tripId }: Props) {
+export function CreatePlaceDialog({ tripId, dayId }: Props) {
   const [open, setOpen] = useState(false);
 
   const { mutate, isPending } = useCreatePlace(tripId);
@@ -56,7 +57,7 @@ export function CreatePlaceDialog({ tripId }: Props) {
   });
 
   function onSubmit(values: CreatePlaceInput) {
-    mutate(values, {
+    mutate({ ...values, dayId } as CreatePlaceInput & { dayId?: string }, {
       onSuccess: () => {
         toast.success("Place added successfully!");
 

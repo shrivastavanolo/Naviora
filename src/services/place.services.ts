@@ -2,7 +2,6 @@ import { NotFoundError, ForbiddenError } from "@/src/lib/errors";
 import { PlaceRepository } from "@/src/repositories/place.repository";
 import type { CreatePlaceInput, UpdatePlaceInput } from "@/src/schemas/place";
 import { TripRepository } from "../repositories/trip.repository";
-import { prisma } from "../lib/prisma";
 
 export class PlaceService {
   private static async requirePlace(placeId: string) {
@@ -33,10 +32,10 @@ export class PlaceService {
   static async createPlace(
     userId: string,
     tripId: string,
-    data: CreatePlaceInput
+    data: CreatePlaceInput & { dayId?: string }
   ) {
     const trip = await this.requireTripAccess(userId, tripId);
-    const nextVisitOrder = await PlaceRepository.getNextVisitOrder(tripId);
+    const nextVisitOrder = await PlaceRepository.getNextVisitOrder(tripId, data.dayId);
 
     return PlaceRepository.create({
       ...data,
@@ -60,7 +59,7 @@ export class PlaceService {
   static async updatePlace(
     userId: string,
     placeId: string,
-    data: UpdatePlaceInput
+    data: UpdatePlaceInput & { dayId?: string | null }
   ) {
     const place = await this.requirePlace(placeId);
     await this.requireTripAccess(userId, place.tripId);
@@ -71,22 +70,25 @@ export class PlaceService {
     const place = await this.requirePlace(placeId);
     await this.requireTripAccess(userId, place.tripId);
     await PlaceRepository.delete(placeId);
-    await PlaceRepository.decrementVisitOrders(place.tripId, place.visitOrder ?? 1);
+    await PlaceRepository.decrementVisitOrders(place.tripId, place.visitOrder ?? 1, place.dayId ?? undefined);
   }
 
   static async reorderPlaces(
     userId: string,
     tripId: string,
-    orders: { id: string; visitOrder: number }[]
+    orders: { id: string; visitOrder: number }[],
+    dayId?: string
   ) {
     await this.requireTripAccess(userId, tripId);
 
-    const existing = await PlaceRepository.findManyByTrip(tripId);
+    const existing = dayId
+      ? await PlaceRepository.findManyByDay(dayId)
+      : await PlaceRepository.findManyByTrip(tripId);
     const existingIds = new Set(existing.map((p) => p.id));
 
     for (const o of orders) {
       if (!existingIds.has(o.id)) {
-        throw new NotFoundError(`Place ${o.id} not found in trip`);
+        throw new NotFoundError(`Place ${o.id} not found`);
       }
     }
 

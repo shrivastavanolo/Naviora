@@ -32,17 +32,17 @@ export const PlaceApi = {
     });
   },
 
-  optimizeRoute(tripId: string) {
+  optimizeRoute(tripId: string, dayId?: string) {
     return api<Place[]>("/routes/optimize", {
       method: "POST",
-      body: JSON.stringify({ tripId }),
+      body: JSON.stringify({ tripId, dayId }),
     });
   },
 
-  reorderPlaces(tripId: string, orders: { id: string; visitOrder: number }[]) {
+  reorderPlaces(tripId: string, orders: { id: string; visitOrder: number }[], dayId?: string) {
     return api<Place[]>(`/trips/${tripId}/places/reorder`, {
       method: "PATCH",
-      body: JSON.stringify({ orders }),
+      body: JSON.stringify({ orders, dayId }),
     });
   },
 };

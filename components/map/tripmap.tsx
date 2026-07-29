@@ -15,11 +15,15 @@ import LoadingSpinner from "../ui/spinner";
 
 interface Props {
   tripId: string;
+  places?: Place[];
+  isLoading?: boolean;
 }
 
-export default function TripMap({ tripId }: Props) {
+export default function TripMap({ tripId, places: propPlaces, isLoading: propLoading }: Props) {
   const mapRef = useRef<MapRef>(null);
-  const { data: places = [], isLoading } = usePlaces(tripId);
+  const { data: fetchedPlaces = [], isLoading: fetching } = usePlaces(tripId);
+  const places = propPlaces ?? fetchedPlaces;
+  const isLoading = propLoading ?? fetching;
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
   const orderedPlaces = useMemo(

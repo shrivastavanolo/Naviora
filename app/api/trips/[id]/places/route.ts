@@ -61,7 +61,10 @@ export async function POST(
     const body = await request.json();
 
     const data = createPlaceSchema.parse(body);
-    const place = await PlaceService.createPlace(user.id, tripId, data);
+    const place = await PlaceService.createPlace(user.id, tripId, {
+      ...data,
+      dayId: body.dayId,
+    });
 
     return NextResponse.json(
       {

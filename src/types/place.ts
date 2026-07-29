@@ -14,6 +14,7 @@ export interface Place {
   estimatedDuration: number | null;
 
   tripId: string;
+  dayId: string | null;
 
   createdAt: string;
   updatedAt: string;

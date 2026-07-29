@@ -68,7 +68,7 @@ export async function POST(request: Request) {
   try {
     await requireAuth();
 
-    const { tripId } = await request.json();
+    const { tripId, dayId } = await request.json();
 
     if (!tripId) {
       return NextResponse.json(
@@ -82,7 +82,9 @@ export async function POST(request: Request) {
       );
     }
 
-    const places = await PlaceRepository.findManyByTrip(tripId);
+    const places = dayId
+      ? await PlaceRepository.findManyByDay(dayId)
+      : await PlaceRepository.findManyByTrip(tripId);
 
     if (places.length < 2) {
       return NextResponse.json({

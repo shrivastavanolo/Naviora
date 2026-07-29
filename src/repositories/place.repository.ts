@@ -10,6 +10,7 @@ export class PlaceRepository {
     visitOrder?: number;
     estimatedDuration?: number;
     tripId: string;
+    dayId?: string;
   }) {
     return prisma.place.create({
       data: {
@@ -21,6 +22,7 @@ export class PlaceRepository {
         visitOrder: data.visitOrder,
         estimatedDuration: data.estimatedDuration,
         tripId: data.tripId,
+        dayId: data.dayId,
       },
     });
   }
@@ -45,6 +47,13 @@ export class PlaceRepository {
     });
   }
 
+  static findManyByDay(dayId: string) {
+    return prisma.place.findMany({
+      where: { dayId },
+      orderBy: { visitOrder: "asc" },
+    });
+  }
+
   static update(
     id: string,
     data: {
@@ -56,6 +65,7 @@ export class PlaceRepository {
       visitOrder?: number;
       estimatedDuration?: number;
       tripId?: string;
+      dayId?: string | null;
     }
   ) {
     return prisma.place.update({
@@ -75,10 +85,11 @@ export class PlaceRepository {
     });
   }
 
-  static decrementVisitOrders(tripId: string, fromOrder: number) {
+  static decrementVisitOrders(tripId: string, fromOrder: number, dayId?: string) {
     return prisma.place.updateMany({
       where: {
         tripId,
+        ...(dayId ? { dayId } : {}),
         visitOrder: { gt: fromOrder },
       },
       data: {
@@ -98,10 +109,11 @@ export class PlaceRepository {
     );
   }
 
-  static getNextVisitOrder(tripId: string) {
+  static async getNextVisitOrder(tripId: string, dayId?: string) {
     return prisma.place.count({
       where: {
         tripId,
+        ...(dayId ? { dayId } : {}),
       },
     });
   }

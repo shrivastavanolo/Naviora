@@ -12,6 +12,7 @@ const reorderSchema = z.object({
       visitOrder: z.number().int().positive(),
     })
   ),
+  dayId: z.string().optional(),
 });
 
 export async function PATCH(
@@ -23,9 +24,9 @@ export async function PATCH(
     const { id: tripId } = await params;
 
     const body = await _request.json();
-    const { orders } = reorderSchema.parse(body);
+    const { orders, dayId } = reorderSchema.parse(body);
 
-    const updated = await PlaceService.reorderPlaces(user.id, tripId, orders);
+    const updated = await PlaceService.reorderPlaces(user.id, tripId, orders, dayId);
 
     return NextResponse.json({
       success: true,
