@@ -82,6 +82,8 @@ export default function DashboardPage() {
         <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border px-6 py-20">
           <Image
             src="/assets/illustrations/empty-trip.svg"
+            width={192}
+            height={192}
             alt="No trips"
             className="mb-4 size-40"
           />
@@ -102,6 +104,8 @@ export default function DashboardPage() {
             <div className="flex flex-col items-center py-16">
               <Image
                 src="/assets/illustrations/empty-search.svg"
+                width={192}
+                height={192}
                 alt="No results"
                 className="size-36"
               />

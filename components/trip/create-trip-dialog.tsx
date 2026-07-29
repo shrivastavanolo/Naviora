@@ -83,6 +83,8 @@ export function CreateTripDialog() {
           <div className="flex flex-col items-center py-8">
             <Image
               src="/assets/illustrations/trip-created.svg"
+              width={192}
+              height={192}
               alt="Trip created"
               className="size-44"
             />

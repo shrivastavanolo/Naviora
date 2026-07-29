@@ -52,6 +52,8 @@ export default function InvitationPage() {
       <main className="mx-auto max-w-lg p-8 text-center">
         <Image
           src="/assets/illustrations/empty-invite.svg"
+          width={192}
+          height={192}
           alt="Invalid invitation"
           className="mx-auto mb-6 size-44"
         />
@@ -71,6 +73,8 @@ export default function InvitationPage() {
       <main className="mx-auto max-w-lg p-8 text-center">
         <Image
           src="/assets/illustrations/empty-invite.svg"
+          width={192}
+          height={192}
           alt="Sign in required"
           className="mx-auto mb-6 size-44"
         />
@@ -93,6 +97,8 @@ export default function InvitationPage() {
       <main className="mx-auto max-w-lg p-8 text-center">
         <Image
           src="/assets/illustrations/empty-invite.svg"
+          width={192}
+          height={192}
           alt="Invitation processed"
           className="mx-auto mb-6 size-44"
         />

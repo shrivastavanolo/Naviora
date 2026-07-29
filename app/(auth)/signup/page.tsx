@@ -56,6 +56,8 @@ export default function SignupPage() {
       <div className="hidden w-1/2 items-center justify-center bg-linear-to-br from-primary/5 to-accent/5 lg:flex">
         <Image
           src="/assets/illustrations/register-hero.svg"
+          height={500}
+          width={300}
           alt="Sign up"
           className="w-full"
         />

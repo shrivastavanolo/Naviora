@@ -36,6 +36,8 @@ export function PlaceSearch({ onSelect }: Props) {
           <Image
             src="/assets/illustrations/empty-search.svg"
             alt="No results"
+            width={192}
+            height={192}
             className="size-32"
           />
           <p className="mt-3 text-sm text-muted-foreground">No places found.</p>

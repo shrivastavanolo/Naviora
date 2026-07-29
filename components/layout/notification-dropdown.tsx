@@ -90,6 +90,8 @@ export function NotificationDropdown() {
             <Image
               src="/assets/illustrations/empty-notifications.svg"
               alt="No notifications"
+              width={192}
+              height={192}
               className="size-28"
             />
             <p className="mt-3 text-sm text-muted-foreground">

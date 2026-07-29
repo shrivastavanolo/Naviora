@@ -252,7 +252,12 @@ export default function CardSwap({
       style: { width, height, ...((child.props as CardProps).style ?? {}) },
       onClick: handleCardClick(i, (child.props as CardProps).onClick),
     };
-    if (refs[i]) extra.ref = refs[i];
+    if (refs[i]) {
+      const idx = i;
+      extra.ref = (el: HTMLDivElement | null) => {
+        (refs[idx] as React.MutableRefObject<HTMLDivElement | null>).current = el;
+      };
+    }
     return cloneElement(
       child as React.ReactElement<Record<string, unknown>>,
       extra

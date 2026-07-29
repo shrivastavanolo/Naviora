@@ -104,6 +104,8 @@ export default function TripMap({
         <Image
           src="/assets/illustrations/empty-map.svg"
           alt="No places"
+          width={192}
+          height={192}
           className="size-48"
         />
       </div>

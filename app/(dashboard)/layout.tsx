@@ -26,6 +26,8 @@ export default function DashboardLayout({
       <div className="flex h-screen flex-col items-center justify-center gap-6">
         <Image
           src="/assets/illustrations/loading-trip.svg"
+          width={192}
+          height={192}
           alt="Loading"
           className="size-48"
         />
