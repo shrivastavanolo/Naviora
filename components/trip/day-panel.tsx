@@ -84,9 +84,6 @@ function SortablePlaceCard({
       </div>
 
       <div className="flex shrink-0 items-center gap-1">
-        <span className="mr-1 text-xs text-muted-foreground">
-          #{place.visitOrder}
-        </span>
         <EditPlaceDialog place={place} />
         <DeletePlaceDialog
           placeId={place.id}
@@ -103,10 +100,7 @@ interface DayPanelProps {
   onReorder: (orders: { id: string; visitOrder: number }[]) => void;
 }
 
-export default function DayPanel({
-  places,
-  onReorder,
-}: DayPanelProps) {
+export default function DayPanel({ places, onReorder }: DayPanelProps) {
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
   );
