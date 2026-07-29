@@ -8,6 +8,19 @@ import { queryClient } from "@/lib/query-client";
 import { AuthApi } from "@/client/auth";
 import { useMe } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+} from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu";
 
 export function Header() {
   const router = useRouter();
@@ -20,6 +33,15 @@ export function Header() {
       router.push("/");
     },
   });
+
+  const initials = user
+    ? user.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2)
+    : "";
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
@@ -36,26 +58,36 @@ export function Header() {
 
         <nav className="flex items-center gap-2">
           {isAuthenticated && user ? (
-            <>
-              <span className="text-sm text-muted-foreground hidden sm:inline">
-                {user.name}
-              </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => router.push("/dashboard")}
-              >
-                Dashboard
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={logoutMutation.isPending}
-                onClick={() => logoutMutation.mutate()}
-              >
-                {logoutMutation.isPending ? "Logging out..." : "Logout"}
-              </Button>
-            </>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                <Avatar>
+                  {user.avatar ? (
+                    <AvatarImage src={user.avatar} alt={user.name} />
+                  ) : null}
+                  <AvatarFallback>{initials}</AvatarFallback>
+                </Avatar>
+                <span className="hidden text-sm text-muted-foreground sm:inline">
+                  {user.name}
+                </span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem render={<Link href="/dashboard" />}>
+                  Dashboard
+                </DropdownMenuItem>
+                <DropdownMenuItem render={<Link href="/profile" />}>
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  disabled={logoutMutation.isPending}
+                  onClick={() => logoutMutation.mutate()}
+                >
+                  {logoutMutation.isPending ? "Logging out..." : "Logout"}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
             <>
               <Button

@@ -22,4 +22,20 @@ export class UserRepository {
       data,
     });
   }
+
+  static update(
+    id: string,
+    data: { name?: string; bio?: string; avatar?: string }
+  ) {
+    return prisma.user.update({
+      where: { id },
+      data,
+    });
+  }
+
+  static delete(id: string) {
+    return prisma.user.delete({
+      where: { id },
+    });
+  }
 }
