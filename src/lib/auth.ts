@@ -1,9 +1,13 @@
 import { SignJWT, jwtVerify } from "jose";
 import { getEnv } from "@/src/config/env";
 
-export async function signToken(userId: string) {
+function getSecret() {
   const env = getEnv();
-  const secret = new TextEncoder().encode(env.JWT_SECRET!);
+  return new TextEncoder().encode(env.JWT_SECRET!);
+}
+
+export async function signToken(userId: string) {
+  const secret = getSecret();
 
   return await new SignJWT({})
     .setProtectedHeader({ alg: "HS256" })
@@ -14,10 +18,28 @@ export async function signToken(userId: string) {
 }
 
 export async function verifyToken(token: string) {
-  const env = getEnv();
-  const secret = new TextEncoder().encode(env.JWT_SECRET!);
+  const secret = getSecret();
 
   const { payload } = await jwtVerify(token, secret);
 
   return payload.sub;
+}
+
+export async function signVerificationToken(userId: string) {
+  const secret = getSecret();
+
+  return await new SignJWT({})
+    .setProtectedHeader({ alg: "HS256" })
+    .setSubject(userId)
+    .setIssuedAt()
+    .setExpirationTime("24h")
+    .sign(secret);
+}
+
+export async function verifyVerificationToken(token: string) {
+  const secret = getSecret();
+
+  const { payload } = await jwtVerify(token, secret);
+
+  return payload.sub as string;
 }

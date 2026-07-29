@@ -26,4 +26,10 @@ export const AuthApi = {
       method: "POST",
     });
   },
+
+  resendVerification() {
+    return api("/auth/resend-verification", {
+      method: "POST",
+    });
+  },
 };

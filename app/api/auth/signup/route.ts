@@ -2,53 +2,11 @@ import { NextResponse } from "next/server";
 
 import { signupSchema } from "@/src/schemas/auth";
 import { AuthService } from "@/src/services/auth.services";
+import { signToken } from "@/src/lib/auth";
 
 import { getErrorResponse } from "@/src/lib/error-handler";
+import { AUTH_COOKIE, TOKEN_EXPIRY } from "@/src/lib/constants";
 
-/**
- * @swagger
- * /api/auth/signup:
- *   post:
- *     summary: Register a new user
- *     description: Creates a new user account with the provided details.
- *     tags:
- *       - Authentication
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - name
- *               - email
- *               - password
- *             properties:
- *               name:
- *                 type: string
- *                 example: John Doe
- *               email:
- *                 type: string
- *                 format: email
- *                 example: john@example.com
- *               password:
- *                 type: string
- *                 format: password
- *                 example: Password123!
- *     responses:
- *       201:
- *         description: User registered successfully.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       400:
- *         $ref: '#/components/responses/BadRequest'
- *       409:
- *         description: User with the provided email already exists.
- *       500:
- *         $ref: '#/components/responses/InternalServerError'
- */
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -56,10 +14,27 @@ export async function POST(request: Request) {
     const data = signupSchema.parse(body);
 
     const user = await AuthService.signup(data);
+    const token = await signToken(user.id);
 
-    return NextResponse.json(user, {
-      status: 201,
+    const response = NextResponse.json(
+      {
+        success: true,
+        data: user,
+      },
+      {
+        status: 201,
+      }
+    );
+
+    response.cookies.set(AUTH_COOKIE, token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: TOKEN_EXPIRY,
     });
+
+    return response;
   } catch (error) {
     const { status, body } = getErrorResponse(error);
 

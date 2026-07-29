@@ -4,5 +4,7 @@ export interface User {
   email: string;
   avatar: string | null;
   bio: string | null;
+  emailVerified: string | null;
+  provider: string;
   createdAt: string;
 }

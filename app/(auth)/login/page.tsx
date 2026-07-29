@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { GoogleButton } from "@/components/auth/google-button";
+import { AuthDivider } from "@/components/auth/auth-divider";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -65,43 +67,49 @@ export default function LoginPage() {
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+          <div className="space-y-5">
+            <GoogleButton />
 
-              <Input
-                id="email"
-                type="email"
-                placeholder="john@example.com"
-                {...register("email")}
-              />
+            <AuthDivider />
 
-              {errors.email && (
-                <p className="text-sm text-red-500">{errors.email.message}</p>
-              )}
-            </div>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="john@example.com"
+                  {...register("email")}
+                />
 
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                {...register("password")}
-              />
+                {errors.email && (
+                  <p className="text-sm text-red-500">{errors.email.message}</p>
+                )}
+              </div>
 
-              {errors.password && (
-                <p className="text-sm text-red-500">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
 
-            <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending ? "Signing in..." : "Login"}
-            </Button>
-          </form>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  {...register("password")}
+                />
+
+                {errors.password && (
+                  <p className="text-sm text-red-500">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+
+              <Button type="submit" className="w-full" disabled={isPending}>
+                {isPending ? "Signing in..." : "Login"}
+              </Button>
+            </form>
+          </div>
         </CardContent>
       </Card>
     </main>

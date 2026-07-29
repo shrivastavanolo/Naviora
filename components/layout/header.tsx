@@ -21,6 +21,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
+import { EmailVerificationBanner } from "@/components/auth/email-verification-banner";
 
 export function Header() {
   const router = useRouter();
@@ -104,6 +105,7 @@ export function Header() {
           )}
         </nav>
       </div>
+      <EmailVerificationBanner />
     </header>
   );
 }
