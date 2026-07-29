@@ -44,7 +44,13 @@ export class TripRepository {
             email: true,
           },
         },
-        members: true,
+        members: {
+          include: {
+            user: {
+              select: { id: true, name: true, email: true, avatar: true },
+            },
+          },
+        },
         places: true,
       },
     });

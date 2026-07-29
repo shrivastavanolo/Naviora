@@ -1,5 +1,7 @@
 import { NotFoundError, ForbiddenError } from "@/src/lib/errors";
 import { PlaceRepository } from "@/src/repositories/place.repository";
+import { ActivityLogService } from "@/src/services/activity-log.services";
+import { broadcastTripUpdate } from "@/lib/broadcast";
 import type { CreatePlaceInput, UpdatePlaceInput } from "@/src/schemas/place";
 import { TripRepository } from "../repositories/trip.repository";
 
@@ -37,11 +39,19 @@ export class PlaceService {
     const trip = await this.requireTripAccess(userId, tripId);
     const nextVisitOrder = await PlaceRepository.getNextVisitOrder(tripId, data.dayId);
 
-    return PlaceRepository.create({
+    const place = await PlaceRepository.create({
       ...data,
       visitOrder: nextVisitOrder + 1,
       tripId: trip.id,
     });
+
+    await ActivityLogService.log(tripId, userId, "place_added", {
+      placeId: place.id,
+      name: data.name,
+    });
+    await broadcastTripUpdate(tripId, "place:added", { placeId: place.id });
+
+    return place;
   }
 
   static async getPlace(userId: string, placeId: string) {
@@ -63,7 +73,13 @@ export class PlaceService {
   ) {
     const place = await this.requirePlace(placeId);
     await this.requireTripAccess(userId, place.tripId);
-    return PlaceRepository.update(placeId, data);
+    const updated = await PlaceRepository.update(placeId, data);
+    await ActivityLogService.log(place.tripId, userId, "place_updated", {
+      placeId,
+      name: place.name,
+    });
+    await broadcastTripUpdate(place.tripId, "place:updated", { placeId });
+    return updated;
   }
 
   static async deletePlace(userId: string, placeId: string) {
@@ -71,6 +87,11 @@ export class PlaceService {
     await this.requireTripAccess(userId, place.tripId);
     await PlaceRepository.delete(placeId);
     await PlaceRepository.decrementVisitOrders(place.tripId, place.visitOrder ?? 1, place.dayId ?? undefined);
+    await ActivityLogService.log(place.tripId, userId, "place_deleted", {
+      placeId,
+      name: place.name,
+    });
+    await broadcastTripUpdate(place.tripId, "place:deleted", { placeId });
   }
 
   static async reorderPlaces(
@@ -92,6 +113,12 @@ export class PlaceService {
       }
     }
 
-    return PlaceRepository.reorder(orders);
+    const result = await PlaceRepository.reorder(orders);
+    await ActivityLogService.log(tripId, userId, "places_reordered", {
+      dayId,
+      count: orders.length,
+    });
+    await broadcastTripUpdate(tripId, "places:reordered", { dayId });
+    return result;
   }
 }

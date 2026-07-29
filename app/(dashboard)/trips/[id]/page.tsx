@@ -1,19 +1,21 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 
 import TripMap from "@/components/map/tripmap";
 import DayTabs from "@/components/trip/day-tabs";
 import DayPanel from "@/components/trip/day-panel";
+import MemberList from "@/components/trip/member-list";
+import ActivityLog from "@/components/trip/activity-log";
 import { useTrip } from "@/hooks/use-trips";
 import { useOptimizeRoute, useReorderPlaces } from "@/hooks/use-places";
 import { useDays, useCreateDay } from "@/hooks/use-trip-days";
+import { useTripChannel } from "@/hooks/use-trip-channel";
 import { Button } from "@/components/ui/button";
 import { CreatePlaceDialog } from "@/components/place/create-place-dialog";
 import LoadingSpinner from "@/components/ui/spinner";
-import { useState } from "react";
 
 export default function TripPage() {
   const router = useRouter();
@@ -22,6 +24,8 @@ export default function TripPage() {
   const { data: trip, isPending: tripLoading } = useTrip(id);
   const { data: days = [], isPending: daysLoading } = useDays(id);
   const createDayMutation = useCreateDay(id);
+
+  useTripChannel(id);
 
   const [activeDayId, setActiveDayId] = useState<string | null>(null);
 
@@ -79,53 +83,66 @@ export default function TripPage() {
         )}
       </section>
 
-      <section>
-        <DayTabs
-          days={days}
-          activeDayId={activeDay?.id ?? null}
-          onDayChange={setActiveDayId}
-          onAddDay={handleAddDay}
-          isAdding={createDayMutation.isPending}
-        />
-      </section>
+      <div className="flex gap-8">
+        <div className="flex-1 min-w-0 space-y-8">
+          <section>
+            <DayTabs
+              days={days}
+              activeDayId={activeDay?.id ?? null}
+              onDayChange={setActiveDayId}
+              onAddDay={handleAddDay}
+              isAdding={createDayMutation.isPending}
+            />
+          </section>
 
-      {activeDay ? (
-        <section>
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-2xl font-semibold">
-              {activeDay.title ?? `Day ${activeDay.dayNumber}`}
-            </h2>
-            <div className="flex items-center gap-2">
+          {activeDay ? (
+            <section>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-2xl font-semibold">
+                  {activeDay.title ?? `Day ${activeDay.dayNumber}`}
+                </h2>
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    disabled={!activeDay.places.length || optimizeMutation.isPending}
+                    onClick={() => optimizeMutation.mutate()}
+                  >
+                    {optimizeMutation.isPending ? "Optimizing..." : "Optimize"}
+                  </Button>
+                  <CreatePlaceDialog tripId={id} dayId={activeDay.id} />
+                </div>
+              </div>
+
+              <DayPanel
+                places={activeDay.places}
+                onReorder={handleReorder}
+              />
+            </section>
+          ) : (
+            <section className="py-12 text-center">
+              <p className="text-muted-foreground">
+                No days yet. Add a day to get started.
+              </p>
               <Button
-                size="sm"
-                disabled={!activeDay.places.length || optimizeMutation.isPending}
-                onClick={() => optimizeMutation.mutate()}
+                className="mt-4"
+                onClick={handleAddDay}
+                disabled={createDayMutation.isPending}
               >
-                {optimizeMutation.isPending ? "Optimizing..." : "Optimize"}
+                {createDayMutation.isPending ? "Adding..." : "Add Day"}
               </Button>
-              <CreatePlaceDialog tripId={id} dayId={activeDay.id} />
-            </div>
-          </div>
+            </section>
+          )}
 
-          <DayPanel
-            places={activeDay.places}
-            onReorder={handleReorder}
-          />
-        </section>
-      ) : (
-        <section className="py-12 text-center">
-          <p className="text-muted-foreground">
-            No days yet. Add a day to get started.
-          </p>
-          <Button
-            className="mt-4"
-            onClick={handleAddDay}
-            disabled={createDayMutation.isPending}
-          >
-            {createDayMutation.isPending ? "Adding..." : "Add Day"}
-          </Button>
-        </section>
-      )}
+          <section>
+            <h2 className="mb-4 text-xl font-semibold">Activity</h2>
+            <ActivityLog tripId={id} />
+          </section>
+        </div>
+
+        <aside className="w-72 shrink-0 space-y-6">
+          <MemberList trip={trip} />
+        </aside>
+      </div>
     </main>
   );
 }

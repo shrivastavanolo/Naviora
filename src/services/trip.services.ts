@@ -1,6 +1,9 @@
 import { NotFoundError, ForbiddenError } from "@/src/lib/errors";
 import { TripRepository } from "@/src/repositories/trip.repository";
 import { TripDayRepository } from "@/src/repositories/trip-day.repository";
+import { TripMemberRepository } from "@/src/repositories/trip-member.repository";
+import { ActivityLogService } from "@/src/services/activity-log.services";
+import { broadcastTripUpdate } from "@/lib/broadcast";
 import type { CreateTripInput, UpdateTripInput } from "@/src/schemas/trip";
 
 export class TripService {
@@ -54,7 +57,12 @@ export class TripService {
       throw new ForbiddenError("Only the trip owner can update this trip");
     }
 
-    return TripRepository.update(tripId, data);
+    const updated = await TripRepository.update(tripId, data);
+    await ActivityLogService.log(tripId, userId, "trip_updated", {
+      changes: Object.keys(data),
+    });
+    await broadcastTripUpdate(tripId, "trip:updated", {});
+    return updated;
   }
 
   static async deleteTrip(userId: string, tripId: string) {
@@ -69,5 +77,31 @@ export class TripService {
     }
 
     return TripRepository.delete(tripId);
+  }
+
+  static async removeMember(userId: string, tripId: string, memberId: string) {
+    const trip = await TripRepository.findById(tripId);
+
+    if (!trip) {
+      throw new NotFoundError("Trip not found");
+    }
+
+    if (trip.ownerId !== userId) {
+      throw new ForbiddenError("Only the trip owner can remove members");
+    }
+
+    if (memberId === userId) {
+      throw new ForbiddenError("You cannot remove yourself as owner");
+    }
+
+    await TripMemberRepository.remove(tripId, memberId);
+
+    await ActivityLogService.log(tripId, userId, "member_removed", {
+      targetUserId: memberId,
+    });
+
+    await broadcastTripUpdate(tripId, "trip:updated", {});
+
+    return { success: true };
   }
 }

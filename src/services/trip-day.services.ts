@@ -1,6 +1,8 @@
 import { NotFoundError, ForbiddenError } from "@/src/lib/errors";
 import { TripDayRepository } from "@/src/repositories/trip-day.repository";
 import { TripRepository } from "@/src/repositories/trip.repository";
+import { ActivityLogService } from "@/src/services/activity-log.services";
+import { broadcastTripUpdate } from "@/lib/broadcast";
 
 export class TripDayService {
   private static async requireTripAccess(userId: string, tripId: string) {
@@ -19,20 +21,40 @@ export class TripDayService {
   static async createDay(userId: string, tripId: string, title?: string) {
     await this.requireTripAccess(userId, tripId);
     const dayNumber = await TripDayRepository.getNextDayNumber(tripId);
-    return TripDayRepository.create({ dayNumber, title: title ?? `Day ${dayNumber}`, tripId });
+    const day = await TripDayRepository.create({ dayNumber, title: title ?? `Day ${dayNumber}`, tripId });
+    await ActivityLogService.log(tripId, userId, "day_created", {
+      dayId: day.id,
+      title: day.title,
+      dayNumber,
+    });
+    await broadcastTripUpdate(tripId, "day:added", { dayId: day.id });
+    return day;
   }
 
   static async updateDay(userId: string, dayId: string, data: { title?: string | null }) {
     const day = await TripDayRepository.findById(dayId);
     if (!day) throw new NotFoundError("Day not found");
     await this.requireTripAccess(userId, day.tripId);
-    return TripDayRepository.update(dayId, data);
+    const updated = await TripDayRepository.update(dayId, data);
+    await ActivityLogService.log(day.tripId, userId, "day_updated", {
+      dayId,
+      oldTitle: day.title,
+      newTitle: data.title,
+    });
+    await broadcastTripUpdate(day.tripId, "day:updated", { dayId });
+    return updated;
   }
 
   static async deleteDay(userId: string, dayId: string) {
     const day = await TripDayRepository.findById(dayId);
     if (!day) throw new NotFoundError("Day not found");
     await this.requireTripAccess(userId, day.tripId);
+    await ActivityLogService.log(day.tripId, userId, "day_deleted", {
+      dayId,
+      title: day.title,
+      dayNumber: day.dayNumber,
+    });
+    await broadcastTripUpdate(day.tripId, "day:deleted", { dayId });
     return TripDayRepository.delete(dayId);
   }
 }

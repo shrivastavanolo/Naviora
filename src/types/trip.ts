@@ -1,3 +1,18 @@
+export interface TripMemberUser {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string | null;
+}
+
+export interface TripMember {
+  id: string;
+  userId: string;
+  role: "OWNER" | "MEMBER";
+  joinedAt: string;
+  user: TripMemberUser;
+}
+
 export interface Trip {
   id: string;
   title: string;
@@ -7,6 +22,9 @@ export interface Trip {
   endDate: string | null;
 
   ownerId: string;
+  owner: TripMemberUser;
+
+  members: TripMember[];
 
   createdAt: string;
   updatedAt: string;

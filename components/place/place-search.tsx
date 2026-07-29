@@ -37,15 +37,18 @@ export function PlaceSearch({ onSelect }: Props) {
             className="block w-full border-b p-3 text-left hover:bg-muted"
             onClick={() => {
               onSelect({
-                name: place.place_name.split(",")[0],
-                address: place.place_name,
-                longitude: place.center[0],
-                latitude: place.center[1],
+                name: place.name,
+                address: place.address,
+                latitude: place.latitude,
+                longitude: place.longitude,
               });
               setQuery("");
             }}
           >
-            {place.place_name}
+            <div className="font-medium">{place.name}</div>
+            {place.address && (
+              <div className="text-sm text-muted-foreground">{place.address}</div>
+            )}
           </button>
         ))}
       </div>

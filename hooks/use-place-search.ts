@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { searchPlaces } from "@/lib/mapbox";
+import { searchPlaces } from "@/lib/places";
 
 export function usePlaceSearch(query: string) {
   return useQuery({
