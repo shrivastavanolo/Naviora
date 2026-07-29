@@ -127,7 +127,7 @@ export default function TripMap({
               id="trip-route-glow"
               type="line"
               paint={{
-                "line-color": "#6D5EF5",
+                "line-color": "#34D399",
                 "line-width": 10,
                 "line-opacity": 0.2,
                 "line-blur": 3,
@@ -137,7 +137,7 @@ export default function TripMap({
               id="trip-route-line"
               type="line"
               paint={{
-                "line-color": "#6D5EF5",
+                "line-color": "#34D399",
                 "line-width": 4,
               }}
             />
@@ -151,7 +151,7 @@ export default function TripMap({
               type="circle"
               paint={{
                 "circle-radius": 5,
-                "circle-color": "#6D5EF5",
+                "circle-color": "#34D399",
                 "circle-stroke-width": 2,
                 "circle-stroke-color": "#ffffff",
               }}

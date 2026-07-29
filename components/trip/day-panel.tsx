@@ -65,12 +65,12 @@ function SortablePlaceCard({
         <div className="flex items-center gap-2">
           <h3 className="font-medium">{place.name}</h3>
           {isStart && (
-            <span className="rounded bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900 dark:text-green-300">
+            <span className="rounded bg-accent/15 px-1.5 py-0.5 text-xs font-medium text-accent">
               Start
             </span>
           )}
           {isEnd && (
-            <span className="rounded bg-red-100 px-1.5 py-0.5 text-xs font-medium text-red-700 dark:bg-red-900 dark:text-red-300">
+            <span className="rounded bg-destructive/15 px-1.5 py-0.5 text-xs font-medium text-destructive">
               End
             </span>
           )}

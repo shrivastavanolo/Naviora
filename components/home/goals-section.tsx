@@ -62,7 +62,7 @@ export function GoalsSection() {
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
             }}
-            className="inline-block rounded-full border border-border bg-muted px-4 py-1 text-xs font-medium tracking-wider text-primary uppercase"
+            className="inline-block rounded-full border border-accent/30 bg-accent/10 px-4 py-1 text-xs font-medium tracking-wider text-accent uppercase"
           >
             Features
           </motion.span>
@@ -74,6 +74,8 @@ export function GoalsSection() {
             }}
             className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
           >
+            <span className="inline-block w-12 h-1 bg-accent rounded-full mb-4" />
+            <br />
             Plan together, travel smarter
           </motion.h2>
 
@@ -97,7 +99,7 @@ export function GoalsSection() {
             }}
             className="text-sm leading-relaxed text-muted-foreground"
           >
-            <Target className="mr-1 inline size-4 text-primary" />
+            <Target className="mr-1 inline size-4 text-accent" />
             <span className="font-medium text-foreground">Pro</span> — AI-powered itinerary
             suggestions and advanced route optimization. Currently in active development and rolling
             out soon.

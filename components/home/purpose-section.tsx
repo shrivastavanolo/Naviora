@@ -13,7 +13,12 @@ const reveal = {
 
 export function PurposeSection() {
   return (
-    <section className="flex items-center justify-center border-t border-border/50 px-6 py-28">
+    <section className="relative flex items-center justify-center border-t border-border/50 px-6 py-28 overflow-hidden">
+      <div
+        className="absolute inset-0 -z-10 bg-cover bg-fixed bg-center opacity-[0.3]"
+        style={{ backgroundImage: "url(/assets/background/bg.png)" }}
+      />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,color-mix(in_oklch,var(--accent),transparent_85%),transparent_70%)]" />
       <motion.div
         initial="hidden"
         whileInView="visible"
@@ -21,7 +26,7 @@ export function PurposeSection() {
         variants={reveal}
         className="flex w-full max-w-3xl flex-col items-center gap-5 text-center"
       >
-        <span className="rounded-full border border-border bg-muted px-4 py-1 text-xs font-medium tracking-wider text-primary uppercase">
+        <span className="rounded-full border border-accent/30 bg-accent/10 px-4 py-1 text-xs font-medium tracking-wider text-accent uppercase">
           Purpose
         </span>
         <p className="text-lg leading-relaxed text-muted-foreground sm:text-xl">

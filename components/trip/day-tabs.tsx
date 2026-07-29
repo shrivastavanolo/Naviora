@@ -26,7 +26,7 @@ export default function DayTabs({
           onClick={() => onDayChange(day.id)}
           className={`shrink-0 rounded-t-lg px-4 py-2 text-sm font-medium transition-colors ${
             activeDayId === day.id
-              ? "border-b-2 border-[#6D5EF5] text-[#6D5EF5]"
+               ? "border-b-2 border-primary text-primary"
               : "text-muted-foreground hover:text-foreground"
           }`}
         >

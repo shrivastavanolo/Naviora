@@ -26,7 +26,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut" as const }}
-          className="bg-linear-to-r from-primary to-secondary bg-clip-text text-5xl font-bold tracking-tight text-transparent sm:text-7xl"
+          className="bg-linear-to-r from-accent via-primary to-secondary bg-clip-text text-5xl font-bold tracking-tight text-transparent sm:text-7xl"
         >
           <Image
             src="/assets/brand/logo.svg"
@@ -41,7 +41,7 @@ export function HeroSection() {
           transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" as const }}
           className="max-w-lg text-lg text-muted-foreground sm:text-xl"
         >
-          Plan and optimize your trips with interactive maps.
+          Plan and <span className="text-accent font-semibold">optimize</span> your trips with interactive maps.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -66,7 +66,7 @@ export function HeroSection() {
             ease: "easeInOut" as const,
           }}
         >
-          <ChevronDown className="size-6 text-muted-foreground" />
+          <ChevronDown className="size-6 text-accent" />
         </motion.div>
       </motion.div>
     </section>

@@ -22,7 +22,7 @@ export function HomeActions() {
     return (
       <div className="flex items-center gap-3">
         <Link href="/dashboard">
-          <Button size="lg" className="min-w-30">
+          <Button size="lg" variant="accent" className="min-w-30">
             Dashboard
           </Button>
         </Link>
@@ -34,7 +34,7 @@ export function HomeActions() {
   return (
     <div className="flex items-center gap-3">
       <Link href="/signup">
-        <Button size="lg" className="min-w-30">
+        <Button size="lg" variant="accent" className="min-w-30">
           Get Started
         </Button>
       </Link>
