@@ -1,32 +1,24 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { HomeActions } from "./home-actions";
+import DomeGallery from "@/components/gallery/dome-gallery";
 
 export function HeroSection() {
   const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
     <section
       ref={ref}
       className="relative flex min-h-screen items-center justify-center overflow-hidden"
     >
-      <motion.div
-        style={{ y: backgroundY, opacity }}
-        className="absolute inset-0 -z-10"
-      >
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(109,94,245,0.12),transparent_70%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(47,53,85,0.25)_1px,transparent_1px),linear-gradient(90deg,rgba(47,53,85,0.25)_1px,transparent_1px)] bg-[length:60px_60px]" />
-      </motion.div>
+      <div className="absolute inset-0 z-0">
+        <DomeGallery />
+      </div>
+
+      <div className="absolute inset-0 z-[1] bg-background/70 pointer-events-none" />
 
       <div className="relative z-10 flex flex-col items-center gap-6 px-6 text-center">
         <motion.h1
@@ -58,7 +50,7 @@ export function HeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 1 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2"
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10"
       >
         <motion.div
           animate={{ y: [0, 6, 0] }}
