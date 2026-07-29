@@ -124,4 +124,20 @@ export class InvitationService {
     if (!user) throw new NotFoundError("User not found");
     return InvitationRepository.findPendingByEmail(user.email);
   }
+
+  static async cancelInvitation(userId: string, tripId: string, invitationId: string) {
+    const trip = await TripRepository.findById(tripId);
+    if (!trip) throw new NotFoundError("Trip not found");
+    if (trip.ownerId !== userId) {
+      throw new ForbiddenError("Only the trip owner can cancel invitations");
+    }
+
+    const invitation = await prisma.invitation.findUnique({ where: { id: invitationId } });
+    if (!invitation) throw new NotFoundError("Invitation not found");
+    if (invitation.tripId !== tripId) {
+      throw new BadRequestError("Invitation does not belong to this trip");
+    }
+
+    return InvitationRepository.delete(invitationId);
+  }
 }

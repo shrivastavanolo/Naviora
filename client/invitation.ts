@@ -34,4 +34,10 @@ export const InvitationApi = {
       body: JSON.stringify({ action }),
     });
   },
+
+  cancelInvitation(tripId: string, invitationId: string) {
+    return api<{ id: string }>(`/trips/${tripId}/invitations/${invitationId}`, {
+      method: "DELETE",
+    });
+  },
 };

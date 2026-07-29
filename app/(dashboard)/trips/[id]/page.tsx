@@ -141,14 +141,11 @@ export default function TripPage() {
             </section>
           )}
 
-          <section>
-            <h2 className="mb-4 text-xl font-semibold">Activity</h2>
-            <ActivityLog tripId={id} />
-          </section>
         </div>
 
         <aside className="w-72 shrink-0 space-y-6">
           <MemberList trip={trip} />
+          <ActivityLog tripId={id} />
         </aside>
       </div>
     </main>

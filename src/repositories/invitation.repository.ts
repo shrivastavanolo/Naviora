@@ -58,4 +58,8 @@ export class InvitationRepository {
       data: { status },
     });
   }
+
+  static delete(id: string) {
+    return prisma.invitation.delete({ where: { id } });
+  }
 }

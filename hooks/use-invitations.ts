@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { InvitationApi } from "@/client/invitation";
+import { toast } from "sonner";
 
 export function usePendingInvitations(tripId: string) {
   return useQuery({
@@ -39,6 +40,23 @@ export function useRespondInvitation(token: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["invitation", token] });
       queryClient.invalidateQueries({ queryKey: ["trips"] });
+    },
+  });
+}
+
+export function useCancelInvitation(tripId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (invitationId: string) =>
+      InvitationApi.cancelInvitation(tripId, invitationId),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["invitations", tripId] });
+      toast.success("Invitation cancelled");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
     },
   });
 }

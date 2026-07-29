@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { X, Mail, UserPlus } from "lucide-react";
+import { X, Mail, UserPlus, ChevronDown, ChevronUp } from "lucide-react";
 
 import { useMe } from "@/hooks/use-auth";
 import {
   useInviteMember,
   usePendingInvitations,
+  useCancelInvitation,
 } from "@/hooks/use-invitations";
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
@@ -28,9 +29,11 @@ export default function MemberList({ trip }: MemberListProps) {
   const isOwner = currentUser?.id === trip.ownerId;
 
   const [showInvite, setShowInvite] = useState(false);
+  const [showPending, setShowPending] = useState(true);
   const [email, setEmail] = useState("");
 
   const inviteMutation = useInviteMember(trip.id);
+  const cancelInviteMutation = useCancelInvitation(trip.id);
   const { data: pendingInvites } = usePendingInvitations(trip.id);
 
   const removeMutation = useMutation({
@@ -159,24 +162,49 @@ export default function MemberList({ trip }: MemberListProps) {
           )}
 
           {pendingInvites && pendingInvites.length > 0 && (
-            <div className="space-y-1.5">
-              <p className="text-xs font-medium text-muted-foreground">
-                Pending invitations
-              </p>
-              {pendingInvites.map((inv) => (
-                <div
-                  key={inv.id}
-                  className="flex items-center gap-2 rounded-md border bg-background px-2 py-1.5 text-sm"
-                >
-                  <Mail className="size-3 text-muted-foreground shrink-0" />
-                  <span className="truncate text-muted-foreground text-xs">
-                    {inv.inviteeEmail}
-                  </span>
-                  <span className="ml-auto text-[10px] text-muted-foreground">
-                    Pending
-                  </span>
+            <div className="rounded-lg border bg-background">
+              <button
+                type="button"
+                onClick={() => setShowPending(!showPending)}
+                className="flex w-full items-center justify-between px-3 py-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <span>
+                  Pending invitations{" "}
+                  <span className="font-normal">({pendingInvites.length})</span>
+                </span>
+                {showPending ? (
+                  <ChevronUp className="size-3.5" />
+                ) : (
+                  <ChevronDown className="size-3.5" />
+                )}
+              </button>
+              {showPending && (
+                <div className="space-y-1 px-3 pb-2">
+                  {pendingInvites.map((inv) => (
+                    <div
+                      key={inv.id}
+                      className="flex items-center gap-2 rounded-md border bg-card px-2 py-1.5 text-sm"
+                    >
+                      <Mail className="size-3 text-muted-foreground shrink-0" />
+                      <span className="truncate text-muted-foreground text-xs flex-1">
+                        {inv.inviteeEmail}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground mr-1">
+                        Pending
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="size-6 shrink-0 text-muted-foreground hover:text-destructive"
+                        onClick={() => cancelInviteMutation.mutate(inv.id)}
+                        disabled={cancelInviteMutation.isPending}
+                      >
+                        <X className="size-3" />
+                      </Button>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
           )}
         </div>
