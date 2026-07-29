@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { HomeActions } from "./home-actions";
 import DomeGallery from "@/components/gallery/dome-gallery";
+import Image from "next/image";
 
 export function HeroSection() {
   const ref = useRef(null);
@@ -18,7 +19,7 @@ export function HeroSection() {
         <DomeGallery />
       </div>
 
-      <div className="absolute inset-0 z-[1] bg-background/70 pointer-events-none" />
+      <div className="absolute inset-0 z-1 bg-background/70 pointer-events-none" />
 
       <div className="relative z-10 flex flex-col items-center gap-6 px-6 text-center">
         <motion.h1
@@ -27,7 +28,7 @@ export function HeroSection() {
           transition={{ duration: 0.7, ease: "easeOut" as const }}
           className="bg-linear-to-r from-primary to-secondary bg-clip-text text-5xl font-bold tracking-tight text-transparent sm:text-7xl"
         >
-          <img src="/assets/brand/logo.svg" alt="Naviora" />
+          <Image src="/assets/brand/logo.svg" alt="Naviora" />
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 24 }}

@@ -147,7 +147,11 @@ export default function ProfilePage() {
 
             <div className="space-y-2">
               <Label>Email</Label>
-              <Input value={user.email} disabled className="text-muted-foreground" />
+              <Input
+                value={user.email}
+                disabled
+                className="text-muted-foreground"
+              />
               <p className="text-xs text-muted-foreground">
                 Email cannot be changed.
               </p>
@@ -155,7 +159,11 @@ export default function ProfilePage() {
 
             <div className="space-y-2">
               <Label>Member Since</Label>
-              <Input value={memberSince} disabled className="text-muted-foreground" />
+              <Input
+                value={memberSince}
+                disabled
+                className="text-muted-foreground"
+              />
             </div>
 
             <Button type="submit" disabled={!isDirty || isUpdating}>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -52,8 +53,8 @@ export default function LoginPage() {
 
   return (
     <main className="flex min-h-screen bg-muted/30">
-      <div className="hidden w-1/2 items-center justify-center bg-gradient-to-br from-primary/5 to-accent/5 lg:flex">
-        <img
+      <div className="hidden w-1/2 items-center justify-center bg-linear-to-br from-primary/5 to-accent/5 lg:flex">
+        <Image
           src="/assets/illustrations/login-hero.svg"
           alt="Login"
           className="w-full"

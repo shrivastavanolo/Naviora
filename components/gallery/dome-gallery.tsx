@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useCallback } from "react";
 import { useGesture } from "@use-gesture/react";
 import "./dome-gallery.css";
+import Image from "next/image";
 
 interface GalleryImage {
   src: string;
@@ -13,11 +14,23 @@ const GALLERY_IMAGES: GalleryImage[] = [
   { src: "/assets/gallery/Amalfi.svg", alt: "Amalfi Coast" },
   { src: "/assets/gallery/GrandCanyon.svg", alt: "Grand Canyon" },
   { src: "/assets/gallery/SanRemo.svg", alt: "San Remo" },
-  { src: "/assets/gallery/Vintage-Travel-Poster-1930s-Japan.svg", alt: "1930s Japan" },
+  {
+    src: "/assets/gallery/Vintage-Travel-Poster-1930s-Japan.svg",
+    alt: "1930s Japan",
+  },
   { src: "/assets/gallery/Vintage-Travel-Poster-India-2.svg", alt: "India" },
-  { src: "/assets/gallery/Vintage-Travel-Poster-Japan-1930s-2.svg", alt: "Japan 1930s" },
-  { src: "/assets/gallery/Vintage-Travel-Poster-Java-Indonesia.svg", alt: "Java Indonesia" },
-  { src: "/assets/gallery/Vintage-Travel-Poster-Rome-Italy-1920.svg", alt: "Rome 1920" },
+  {
+    src: "/assets/gallery/Vintage-Travel-Poster-Japan-1930s-2.svg",
+    alt: "Japan 1930s",
+  },
+  {
+    src: "/assets/gallery/Vintage-Travel-Poster-Java-Indonesia.svg",
+    alt: "Java Indonesia",
+  },
+  {
+    src: "/assets/gallery/Vintage-Travel-Poster-Rome-Italy-1920.svg",
+    alt: "Rome 1920",
+  },
 ];
 
 const DEFAULTS = {
@@ -27,7 +40,8 @@ const DEFAULTS = {
   segments: 35,
 };
 
-const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
+const clamp = (v: number, min: number, max: number) =>
+  Math.min(Math.max(v, min), max);
 const normalizeAngle = (d: number) => ((d % 360) + 360) % 360;
 const wrapAngleSigned = (deg: number) => {
   const a = (((deg + 180) % 360) + 360) % 360;
@@ -78,7 +92,10 @@ function buildItems(pool: (string | GalleryImage)[], seg: number): Item[] {
     return { src: image.src || "", alt: image.alt || "" };
   });
 
-  const used: GalleryImage[] = Array.from({ length: totalSlots }, (_, i) => normalized[i % normalized.length]);
+  const used: GalleryImage[] = Array.from(
+    { length: totalSlots },
+    (_, i) => normalized[i % normalized.length]
+  );
 
   for (let i = 1; i < used.length; i++) {
     if (used[i].src === used[i - 1].src) {
@@ -100,7 +117,13 @@ function buildItems(pool: (string | GalleryImage)[], seg: number): Item[] {
   }));
 }
 
-function computeItemBaseRotation(offsetX: number, offsetY: number, sizeX: number, sizeY: number, segments: number) {
+function computeItemBaseRotation(
+  offsetX: number,
+  offsetY: number,
+  sizeX: number,
+  sizeY: number,
+  segments: number
+) {
   const unit = 360 / segments / 2;
   const rotateY = unit * (offsetX + (sizeX - 1) / 2);
   const rotateX = unit * (offsetY - (sizeY - 1) / 2);
@@ -228,10 +251,15 @@ export default function DomeGallery({
       root.style.setProperty("--overlay-blur-color", overlayBlurColor);
       root.style.setProperty("--tile-radius", imageBorderRadius);
       root.style.setProperty("--enlarge-radius", openedImageBorderRadius);
-      root.style.setProperty("--image-filter", grayscale ? "grayscale(1)" : "none");
+      root.style.setProperty(
+        "--image-filter",
+        grayscale ? "grayscale(1)" : "none"
+      );
       applyTransform(rotationRef.current.x, rotationRef.current.y);
 
-      const enlargedOverlay = viewerRef.current?.querySelector(".enlarge") as HTMLElement | null;
+      const enlargedOverlay = viewerRef.current?.querySelector(
+        ".enlarge"
+      ) as HTMLElement | null;
       if (enlargedOverlay && frameRef.current && mainRef.current) {
         const frameR = frameRef.current.getBoundingClientRect();
         const mainR = mainRef.current.getBoundingClientRect();
@@ -244,8 +272,10 @@ export default function DomeGallery({
           const tempRect = tempDiv.getBoundingClientRect();
           document.body.removeChild(tempDiv);
 
-          const centeredLeft = frameR.left - mainR.left + (frameR.width - tempRect.width) / 2;
-          const centeredTop = frameR.top - mainR.top + (frameR.height - tempRect.height) / 2;
+          const centeredLeft =
+            frameR.left - mainR.left + (frameR.width - tempRect.width) / 2;
+          const centeredTop =
+            frameR.top - mainR.top + (frameR.height - tempRect.height) / 2;
 
           enlargedOverlay.style.left = `${centeredLeft}px`;
           enlargedOverlay.style.top = `${centeredTop}px`;
@@ -259,7 +289,6 @@ export default function DomeGallery({
     });
     ro.observe(root);
     return () => ro.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     fit,
     fitBasis,
@@ -332,8 +361,19 @@ export default function DomeGallery({
         startRotRef.current = { ...rotationRef.current };
         startPosRef.current = { x: 0, y: 0 };
       },
-      onDrag: ({ event, last, velocity = [0, 0], direction = [0, 0], movement }) => {
-        if (focusedElRef.current || !draggingRef.current || !startPosRef.current) return;
+      onDrag: ({
+        event,
+        last,
+        velocity = [0, 0],
+        direction = [0, 0],
+        movement,
+      }) => {
+        if (
+          focusedElRef.current ||
+          !draggingRef.current ||
+          !startPosRef.current
+        )
+          return;
         const evt = event as PointerEvent;
         const dxTotal = evt.clientX - startPosRef.current.x;
         const dyTotal = evt.clientY - startPosRef.current.y;
@@ -346,8 +386,13 @@ export default function DomeGallery({
           -maxVerticalRotationDeg,
           maxVerticalRotationDeg
         );
-        const nextY = wrapAngleSigned(startRotRef.current.y + dxTotal / dragSensitivity);
-        if (rotationRef.current.x !== nextX || rotationRef.current.y !== nextY) {
+        const nextY = wrapAngleSigned(
+          startRotRef.current.y + dxTotal / dragSensitivity
+        );
+        if (
+          rotationRef.current.x !== nextX ||
+          rotationRef.current.y !== nextY
+        ) {
           rotationRef.current = { x: nextX, y: nextY };
           applyTransform(nextX, nextY);
         }
@@ -357,12 +402,17 @@ export default function DomeGallery({
           const [dirX, dirY] = direction;
           let vx = vMagX * dirX;
           let vy = vMagY * dirY;
-          if (Math.abs(vx) < 0.001 && Math.abs(vy) < 0.001 && Array.isArray(movement)) {
+          if (
+            Math.abs(vx) < 0.001 &&
+            Math.abs(vy) < 0.001 &&
+            Array.isArray(movement)
+          ) {
             const [mx, my] = movement;
             vx = clamp((mx / dragSensitivity) * 0.02, -1.2, 1.2);
             vy = clamp((my / dragSensitivity) * 0.02, -1.2, 1.2);
           }
-          if (Math.abs(vx) > 0.005 || Math.abs(vy) > 0.005) startInertia(vx, vy);
+          if (Math.abs(vx) > 0.005 || Math.abs(vy) > 0.005)
+            startInertia(vx, vy);
           if (movedRef.current) lastDragEndAt.current = performance.now();
           movedRef.current = false;
         }
@@ -379,9 +429,13 @@ export default function DomeGallery({
       const el = focusedElRef.current;
       if (!el) return;
       const parent = el.parentElement;
-      const overlay = viewerRef.current?.querySelector(".enlarge") as HTMLElement | null;
+      const overlay = viewerRef.current?.querySelector(
+        ".enlarge"
+      ) as HTMLElement | null;
       if (!overlay) return;
-      const refDiv = parent?.querySelector(".item__image--reference") as HTMLElement | null;
+      const refDiv = parent?.querySelector(
+        ".item__image--reference"
+      ) as HTMLElement | null;
       const originalPos = originalTilePositionRef.current;
       if (!originalPos) {
         overlay.remove();
@@ -454,14 +508,19 @@ export default function DomeGallery({
                 el.style.transition = "";
                 el.style.opacity = "";
                 openingRef.current = false;
-                if (!draggingRef.current && rootRef.current?.getAttribute("data-enlarging") !== "true")
+                if (
+                  !draggingRef.current &&
+                  rootRef.current?.getAttribute("data-enlarging") !== "true"
+                )
                   document.body.classList.remove("dg-scroll-lock");
               }, 300);
             });
           });
         });
       };
-      animatingOverlay.addEventListener("transitionend", cleanup, { once: true });
+      animatingOverlay.addEventListener("transitionend", cleanup, {
+        once: true,
+      });
     };
     scrim.addEventListener("click", close);
     const onKey = (e: KeyboardEvent) => {
@@ -487,7 +546,13 @@ export default function DomeGallery({
       const offsetY = getDataNumber(parent, "offsetY", 0);
       const sizeX = getDataNumber(parent, "sizeX", 2);
       const sizeY = getDataNumber(parent, "sizeY", 2);
-      const parentRot = computeItemBaseRotation(offsetX, offsetY, sizeX, sizeY, segments);
+      const parentRot = computeItemBaseRotation(
+        offsetX,
+        offsetY,
+        sizeX,
+        sizeY,
+        segments
+      );
       const parentY = normalizeAngle(parentRot.rotateY);
       const globalY = normalizeAngle(rotationRef.current.y);
       let rotY = -(parentY + globalY) % 360;
@@ -568,8 +633,10 @@ export default function DomeGallery({
           overlay.style.height = frameR.height + "px";
           void overlay.offsetWidth;
           overlay.style.transition = `left ${enlargeTransitionMs}ms ease, top ${enlargeTransitionMs}ms ease, width ${enlargeTransitionMs}ms ease, height ${enlargeTransitionMs}ms ease`;
-          const centeredLeft = frameR.left - mainR.left + (frameR.width - newRect.width) / 2;
-          const centeredTop = frameR.top - mainR.top + (frameR.height - newRect.height) / 2;
+          const centeredLeft =
+            frameR.left - mainR.left + (frameR.width - newRect.width) / 2;
+          const centeredTop =
+            frameR.top - mainR.top + (frameR.height - newRect.height) / 2;
           requestAnimationFrame(() => {
             overlay.style.left = `${centeredLeft}px`;
             overlay.style.top = `${centeredTop}px`;
@@ -580,12 +647,21 @@ export default function DomeGallery({
             overlay.removeEventListener("transitionend", cleanupSecond);
             overlay.style.transition = prevTransition;
           };
-          overlay.addEventListener("transitionend", cleanupSecond, { once: true });
+          overlay.addEventListener("transitionend", cleanupSecond, {
+            once: true,
+          });
         };
         overlay.addEventListener("transitionend", onFirstEnd);
       }
     },
-    [enlargeTransitionMs, lockScroll, openedImageHeight, openedImageWidth, segments, unlockScroll]
+    [
+      enlargeTransitionMs,
+      lockScroll,
+      openedImageHeight,
+      openedImageWidth,
+      segments,
+      unlockScroll,
+    ]
   );
 
   const onTileClick = useCallback(
@@ -632,7 +708,10 @@ export default function DomeGallery({
         } as React.CSSProperties
       }
     >
-      <main ref={mainRef as React.RefObject<HTMLElement>} className="sphere-main">
+      <main
+        ref={mainRef as React.RefObject<HTMLElement>}
+        className="sphere-main"
+      >
         <div className="stage">
           <div ref={sphereRef} className="sphere">
             {items.map((it, i) => (
@@ -661,7 +740,7 @@ export default function DomeGallery({
                   onClick={onTileClick}
                   onPointerUp={onTilePointerUp}
                 >
-                  <img src={it.src} draggable={false} alt={it.alt} />
+                  <Image src={it.src} draggable={false} alt={it.alt} />
                 </div>
               </div>
             ))}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
 import { useCallback, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 
@@ -51,10 +52,11 @@ export default function TripPage() {
   if (tripLoading || daysLoading) {
     return (
       <div className="flex h-screen flex-col items-center justify-center gap-6">
-        <img
+        <Image
           src="/assets/illustrations/loading-trip.svg"
-          alt="Loading"
-          className="size-48"
+          width={192}
+          height={192}
+          alt="loading-trip"
         />
         <p className="text-sm text-muted-foreground">Loading trip...</p>
       </div>
@@ -112,7 +114,9 @@ export default function TripPage() {
                 <div className="flex items-center gap-2">
                   <Button
                     size="sm"
-                    disabled={!activeDay.places.length || optimizeMutation.isPending}
+                    disabled={
+                      !activeDay.places.length || optimizeMutation.isPending
+                    }
                     onClick={() => optimizeMutation.mutate()}
                   >
                     {optimizeMutation.isPending ? "Optimizing..." : "Optimize"}
@@ -121,10 +125,7 @@ export default function TripPage() {
                 </div>
               </div>
 
-              <DayPanel
-                places={activeDay.places}
-                onReorder={handleReorder}
-              />
+              <DayPanel places={activeDay.places} onReorder={handleReorder} />
             </section>
           ) : (
             <section className="py-12 text-center">
@@ -140,7 +141,6 @@ export default function TripPage() {
               </Button>
             </section>
           )}
-
         </div>
 
         <aside className="w-72 shrink-0 space-y-6">

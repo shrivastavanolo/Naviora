@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 import { usePlaceSearch } from "@/hooks/use-place-search";
 import LoadingSpinner from "../ui/spinner";
@@ -32,7 +33,7 @@ export function PlaceSearch({ onSelect }: Props) {
 
       {query && data && data.length === 0 ? (
         <div className="flex flex-col items-center py-8">
-          <img
+          <Image
             src="/assets/illustrations/empty-search.svg"
             alt="No results"
             className="size-32"
@@ -57,7 +58,9 @@ export function PlaceSearch({ onSelect }: Props) {
             >
               <div className="font-medium">{place.name}</div>
               {place.address && (
-                <div className="text-sm text-muted-foreground">{place.address}</div>
+                <div className="text-sm text-muted-foreground">
+                  {place.address}
+                </div>
               )}
             </button>
           ))}

@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTripActivity } from "@/hooks/use-trip-activity";
 import LoadingSpinner from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 const ACTION_LABELS: Record<string, string> = {
   place_added: "added a place",
@@ -46,7 +47,7 @@ export default function ActivityLog({ tripId }: ActivityLogProps) {
   if (!logs.length) {
     return (
       <div className="flex flex-col items-center py-8">
-        <img
+        <Image
           src="/assets/illustrations/empty-notifications.svg"
           alt="No activity"
           className="size-28"

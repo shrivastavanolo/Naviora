@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Search } from "lucide-react";
+import Image from "next/image";
 
 import { useTrips } from "@/hooks/use-trips";
 import { TripCard } from "@/components/trip/trip-card";
@@ -79,7 +80,7 @@ export default function DashboardPage() {
 
       {!allTrips.length ? (
         <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border px-6 py-20">
-          <img
+          <Image
             src="/assets/illustrations/empty-trip.svg"
             alt="No trips"
             className="mb-4 size-40"
@@ -99,7 +100,7 @@ export default function DashboardPage() {
 
           {searchQuery && !allTrips.length && (
             <div className="flex flex-col items-center py-16">
-              <img
+              <Image
                 src="/assets/illustrations/empty-search.svg"
                 alt="No results"
                 className="size-36"

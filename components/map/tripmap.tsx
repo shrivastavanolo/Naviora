@@ -6,6 +6,7 @@ import Map, { Marker, Popup, Source, Layer } from "react-map-gl/mapbox";
 import type { MapRef } from "react-map-gl/mapbox";
 import type { Feature, LineString, FeatureCollection, Point } from "geojson";
 import { useRoute } from "@/hooks/use-route";
+import Image from "next/image";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 
@@ -19,7 +20,11 @@ interface Props {
   isLoading?: boolean;
 }
 
-export default function TripMap({ tripId, places: propPlaces, isLoading: propLoading }: Props) {
+export default function TripMap({
+  tripId,
+  places: propPlaces,
+  isLoading: propLoading,
+}: Props) {
   const mapRef = useRef<MapRef>(null);
   const { data: fetchedPlaces = [], isLoading: fetching } = usePlaces(tripId);
   const places = propPlaces ?? fetchedPlaces;
@@ -96,7 +101,7 @@ export default function TripMap({ tripId, places: propPlaces, isLoading: propLoa
   if (!orderedPlaces.length) {
     return (
       <div className="flex h-125 w-full items-center justify-center rounded-xl bg-muted/30">
-        <img
+        <Image
           src="/assets/illustrations/empty-map.svg"
           alt="No places"
           className="size-48"

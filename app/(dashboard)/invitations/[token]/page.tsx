@@ -3,6 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { toast } from "sonner";
+import Image from "next/image";
 
 import { useInvitation, useRespondInvitation } from "@/hooks/use-invitations";
 import { useMe } from "@/hooks/use-auth";
@@ -20,7 +21,8 @@ export default function InvitationPage() {
   const handleAccept = useCallback(() => {
     respondMutation.mutate("accept", {
       onSuccess: (data) => {
-        const tripId = (data as unknown as { member: { tripId: string } })?.member?.tripId;
+        const tripId = (data as unknown as { member: { tripId: string } })
+          ?.member?.tripId;
         toast.success("You've joined the trip!");
         if (tripId) router.push(`/trips/${tripId}`);
         else router.push("/dashboard");
@@ -48,7 +50,7 @@ export default function InvitationPage() {
   if (error || !invitation) {
     return (
       <main className="mx-auto max-w-lg p-8 text-center">
-        <img
+        <Image
           src="/assets/illustrations/empty-invite.svg"
           alt="Invalid invitation"
           className="mx-auto mb-6 size-44"
@@ -67,7 +69,7 @@ export default function InvitationPage() {
   if (!user) {
     return (
       <main className="mx-auto max-w-lg p-8 text-center">
-        <img
+        <Image
           src="/assets/illustrations/empty-invite.svg"
           alt="Sign in required"
           className="mx-auto mb-6 size-44"
@@ -89,12 +91,14 @@ export default function InvitationPage() {
   if (invitation.status !== "PENDING") {
     return (
       <main className="mx-auto max-w-lg p-8 text-center">
-        <img
+        <Image
           src="/assets/illustrations/empty-invite.svg"
           alt="Invitation processed"
           className="mx-auto mb-6 size-44"
         />
-        <h1 className="text-2xl font-bold">Invitation {invitation.status.toLowerCase()}</h1>
+        <h1 className="text-2xl font-bold">
+          Invitation {invitation.status.toLowerCase()}
+        </h1>
         <p className="mt-2 text-muted-foreground">
           This invitation has already been {invitation.status.toLowerCase()}.
         </p>

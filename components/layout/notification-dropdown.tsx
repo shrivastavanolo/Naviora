@@ -3,8 +3,14 @@
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Bell } from "lucide-react";
+import Image from "next/image";
 
-import { useNotifications, useUnreadCount, useMarkAsRead, useMarkAllAsRead } from "@/hooks/use-notifications";
+import {
+  useNotifications,
+  useUnreadCount,
+  useMarkAsRead,
+  useMarkAllAsRead,
+} from "@/hooks/use-notifications";
 import { useNotificationChannel } from "@/hooks/use-notification-channel";
 import {
   DropdownMenu,
@@ -81,7 +87,7 @@ export function NotificationDropdown() {
 
         {notifications.length === 0 ? (
           <div className="flex flex-col items-center px-4 py-8">
-            <img
+            <Image
               src="/assets/illustrations/empty-notifications.svg"
               alt="No notifications"
               className="size-28"
@@ -94,7 +100,9 @@ export function NotificationDropdown() {
           notifications.map((n) => (
             <DropdownMenuItem
               key={n.id}
-              className={`flex flex-col items-start gap-0.5 px-3 py-2.5 ${!n.read ? "bg-primary/5" : ""}`}
+              className={`flex flex-col items-start gap-0.5 px-3 py-2.5 ${
+                !n.read ? "bg-primary/5" : ""
+              }`}
               onClick={() => handleClick(n)}
             >
               <div className="flex w-full items-start gap-2">

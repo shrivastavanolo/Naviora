@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import Image from "next/image";
 
 import type { Trip } from "@/src/types/trip";
 
@@ -73,12 +74,14 @@ export function CreateTripDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button size="lg" className="min-w-30" />}>+ New Trip</DialogTrigger>
+      <DialogTrigger render={<Button size="lg" className="min-w-30" />}>
+        + New Trip
+      </DialogTrigger>
 
       <DialogContent className="sm:max-w-lg">
         {showSuccess ? (
           <div className="flex flex-col items-center py-8">
-            <img
+            <Image
               src="/assets/illustrations/trip-created.svg"
               alt="Trip created"
               className="size-44"
@@ -98,7 +101,11 @@ export function CreateTripDialog() {
               <div className="space-y-2">
                 <Label htmlFor="title">Title</Label>
 
-                <Input id="title" placeholder="Japan 2027" {...register("title")} />
+                <Input
+                  id="title"
+                  placeholder="Japan 2027"
+                  {...register("title")}
+                />
 
                 {errors.title && (
                   <p className="text-sm text-red-500">{errors.title.message}</p>
@@ -125,7 +132,11 @@ export function CreateTripDialog() {
                 <div className="space-y-2">
                   <Label htmlFor="startDate">Start Date</Label>
 
-                  <Input id="startDate" type="date" {...register("startDate")} />
+                  <Input
+                    id="startDate"
+                    type="date"
+                    {...register("startDate")}
+                  />
 
                   {errors.startDate && (
                     <p className="text-sm text-red-500">
@@ -140,7 +151,9 @@ export function CreateTripDialog() {
                   <Input id="endDate" type="date" {...register("endDate")} />
 
                   {errors.endDate && (
-                    <p className="text-sm text-red-500">{errors.endDate.message}</p>
+                    <p className="text-sm text-red-500">
+                      {errors.endDate.message}
+                    </p>
                   )}
                 </div>
               </div>
