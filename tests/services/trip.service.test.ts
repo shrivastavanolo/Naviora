@@ -12,6 +12,7 @@ vi.mock("@/src/repositories/trip.repository", () => ({
     findManyByUser: vi.fn(),
     update: vi.fn(),
     delete: vi.fn(),
+    countByUser: vi.fn(),
   },
 }));
 
@@ -19,6 +20,22 @@ vi.mock("@/src/repositories/trip-day.repository", () => ({
   TripDayRepository: {
     create: vi.fn(),
   },
+}));
+
+vi.mock("@/src/services/activity-log.services", () => ({
+  ActivityLogService: {
+    log: vi.fn().mockResolvedValue(undefined),
+  },
+}));
+
+vi.mock("@/src/services/notification.services", () => ({
+  NotificationService: {
+    create: vi.fn().mockResolvedValue(undefined),
+  },
+}));
+
+vi.mock("@/lib/broadcast", () => ({
+  broadcastTripUpdate: vi.fn().mockResolvedValue(undefined),
 }));
 
 afterEach(() => {
@@ -122,15 +139,23 @@ describe("TripService", () => {
   describe("getMyTrips", () => {
     it("should return all trips for the user", async () => {
       const trips = [makeTrip(), makeTrip({ id: "trip-2" })];
+      const total = 2;
 
       vi.spyOn(TripRepository, "findManyByUser").mockResolvedValue(
         trips as never
       );
+      vi.spyOn(TripRepository, "countByUser").mockResolvedValue(total);
 
       const result = await TripService.getMyTrips("user-1");
 
-      expect(TripRepository.findManyByUser).toHaveBeenCalledWith("user-1");
-      expect(result).toEqual(trips);
+      expect(TripRepository.findManyByUser).toHaveBeenCalledWith("user-1", 1, 9, undefined);
+      expect(result).toEqual({
+        trips,
+        total,
+        page: 1,
+        limit: 9,
+        totalPages: 1,
+      });
     });
   });
 

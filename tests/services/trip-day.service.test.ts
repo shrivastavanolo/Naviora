@@ -22,6 +22,22 @@ vi.mock("@/src/repositories/trip.repository", () => ({
   },
 }));
 
+vi.mock("@/src/services/activity-log.services", () => ({
+  ActivityLogService: {
+    log: vi.fn().mockResolvedValue(undefined),
+  },
+}));
+
+vi.mock("@/src/services/notification.services", () => ({
+  NotificationService: {
+    create: vi.fn().mockResolvedValue(undefined),
+  },
+}));
+
+vi.mock("@/lib/broadcast", () => ({
+  broadcastTripUpdate: vi.fn().mockResolvedValue(undefined),
+}));
+
 afterEach(() => {
   vi.clearAllMocks();
 });

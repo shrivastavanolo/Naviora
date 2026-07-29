@@ -12,6 +12,10 @@ vi.mock("bcryptjs", () => ({
   },
 }));
 
+vi.mock("@/src/lib/auth", () => ({
+  signVerificationToken: vi.fn().mockResolvedValue("mock-token"),
+}));
+
 vi.mock("@/src/repositories/user.repository", () => ({
   UserRepository: {
     findByEmail: vi.fn(),
@@ -61,6 +65,7 @@ describe("AuthService", () => {
       expect(UserRepository.create).toHaveBeenCalledWith({
         ...input,
         password: "hashed-password",
+        provider: "email",
       });
 
       expect(result).toEqual({
