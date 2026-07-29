@@ -56,9 +56,3 @@
   margin: 0;
 }
 
-@media (max-width: 768px) {
-  .card-swap-container {
-    bottom: 40px;
-    transform: translate(2%, 0%);
-  }
-}

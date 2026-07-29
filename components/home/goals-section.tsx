@@ -114,21 +114,41 @@ export function GoalsSection() {
           className="relative flex-1"
           style={{ height: 500 }}
         >
-          <CardSwap
-            cardDistance={60}
-            verticalDistance={70}
-            delay={4500}
-            pauseOnHover
-            easing="elastic"
-          >
+          <div className="hidden lg:block">
+            <CardSwap
+              cardDistance={60}
+              verticalDistance={70}
+              delay={4500}
+              pauseOnHover
+              easing="elastic"
+            >
+              {features.map((f) => (
+                <Card key={f.title}>
+                  <div className="card-icon">{<f.icon />}</div>
+                  <h3>{f.title}</h3>
+                  <p>{f.description}</p>
+                </Card>
+              ))}
+            </CardSwap>
+          </div>
+          <div className="grid h-full grid-cols-2 content-center gap-3 lg:hidden">
             {features.map((f) => (
-              <Card key={f.title}>
-                <div className="card-icon">{<f.icon />}</div>
-                <h3>{f.title}</h3>
-                <p>{f.description}</p>
-              </Card>
+              <div
+                key={f.title}
+                className="flex flex-col gap-2 rounded-xl border border-border/50 bg-card p-4"
+              >
+                <div className="flex size-10 items-center justify-center rounded-lg bg-secondary/15 text-secondary">
+                  <f.icon className="size-5" />
+                </div>
+                <h3 className="text-sm font-semibold text-foreground">
+                  {f.title}
+                </h3>
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  {f.description}
+                </p>
+              </div>
             ))}
-          </CardSwap>
+          </div>
         </motion.div>
       </div>
     </section>
