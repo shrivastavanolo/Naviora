@@ -15,7 +15,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 import type { Trip } from "@/src/types/trip";
 
@@ -88,6 +88,9 @@ export default function MemberList({ trip }: MemberListProps) {
           >
             <div className="flex items-center gap-2 min-w-0">
               <Avatar className="size-8 shrink-0">
+                {member.user.avatar && (
+                  <AvatarImage src={member.user.avatar} alt={member.user.name} />
+                )}
                 <AvatarFallback className="text-xs">
                   {initials(member.user.name)}
                 </AvatarFallback>

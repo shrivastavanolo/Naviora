@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTripActivity } from "@/hooks/use-trip-activity";
 import LoadingSpinner from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Image from "next/image";
 
 const ACTION_LABELS: Record<string, string> = {
@@ -70,9 +71,14 @@ export default function ActivityLog({ tripId }: ActivityLogProps) {
             key={entry.id}
             className="flex items-start gap-2 rounded-lg p-2 text-sm"
           >
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-[10px] font-medium">
-              {entry.user.name.charAt(0).toUpperCase()}
-            </div>
+            <Avatar className="size-7 shrink-0">
+              {entry.user.avatar && (
+                <AvatarImage src={entry.user.avatar} alt={entry.user.name} />
+              )}
+              <AvatarFallback className="text-[10px]">
+                {entry.user.name.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
             <div className="min-w-0 flex-1">
               <p className="text-xs leading-snug">
                 <span className="font-medium">{entry.user.name}</span>{" "}

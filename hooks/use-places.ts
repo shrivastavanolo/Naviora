@@ -13,14 +13,6 @@ export function usePlaces(tripId: string) {
   });
 }
 
-export function usePlace(id: string) {
-  return useQuery({
-    queryKey: ["place", id],
-    queryFn: () => PlaceApi.getPlace(id),
-    enabled: !!id,
-  });
-}
-
 function invalidatePlaceQueries(queryClient: ReturnType<typeof useQueryClient>, tripId: string) {
   queryClient.invalidateQueries({ queryKey: ["places", tripId] });
   queryClient.invalidateQueries({ queryKey: ["trip-days", tripId] });

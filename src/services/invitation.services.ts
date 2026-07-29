@@ -1,11 +1,17 @@
-import { NotFoundError, ForbiddenError, BadRequestError, ConflictError } from "@/src/lib/errors";
+import {
+  NotFoundError,
+  ForbiddenError,
+  BadRequestError,
+  ConflictError,
+} from "@/src/lib/errors";
 import { TripRepository } from "@/src/repositories/trip.repository";
 import { InvitationRepository } from "@/src/repositories/invitation.repository";
 import { ActivityLogService } from "@/src/services/activity-log.services";
 import { NotificationService } from "@/src/services/notification.services";
 import { prisma } from "@/src/lib/prisma";
 
-const INVITATION_ORIGIN = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+const INVITATION_ORIGIN =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export class InvitationService {
   private static async requireOwnerAccess(userId: string, tripId: string) {
@@ -125,14 +131,20 @@ export class InvitationService {
     return InvitationRepository.findPendingByEmail(user.email);
   }
 
-  static async cancelInvitation(userId: string, tripId: string, invitationId: string) {
+  static async cancelInvitation(
+    userId: string,
+    tripId: string,
+    invitationId: string
+  ) {
     const trip = await TripRepository.findById(tripId);
     if (!trip) throw new NotFoundError("Trip not found");
     if (trip.ownerId !== userId) {
       throw new ForbiddenError("Only the trip owner can cancel invitations");
     }
 
-    const invitation = await prisma.invitation.findUnique({ where: { id: invitationId } });
+    const invitation = await prisma.invitation.findUnique({
+      where: { id: invitationId },
+    });
     if (!invitation) throw new NotFoundError("Invitation not found");
     if (invitation.tripId !== tripId) {
       throw new BadRequestError("Invitation does not belong to this trip");
