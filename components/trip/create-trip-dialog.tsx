@@ -73,7 +73,7 @@ export function CreateTripDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button />}>+ New Trip</DialogTrigger>
+      <DialogTrigger render={<Button size="lg" className="min-w-30" />}>+ New Trip</DialogTrigger>
 
       <DialogContent className="sm:max-w-lg">
         {showSuccess ? (
