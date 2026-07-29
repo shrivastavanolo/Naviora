@@ -2,6 +2,7 @@ import { NotFoundError, ForbiddenError } from "@/src/lib/errors";
 import { TripDayRepository } from "@/src/repositories/trip-day.repository";
 import { TripRepository } from "@/src/repositories/trip.repository";
 import { ActivityLogService } from "@/src/services/activity-log.services";
+import { NotificationService } from "@/src/services/notification.services";
 import { broadcastTripUpdate } from "@/lib/broadcast";
 
 export class TripDayService {
@@ -19,7 +20,7 @@ export class TripDayService {
   }
 
   static async createDay(userId: string, tripId: string, title?: string) {
-    await this.requireTripAccess(userId, tripId);
+    const trip = await this.requireTripAccess(userId, tripId);
     const dayNumber = await TripDayRepository.getNextDayNumber(tripId);
     const day = await TripDayRepository.create({ dayNumber, title: title ?? `Day ${dayNumber}`, tripId });
     await ActivityLogService.log(tripId, userId, "day_created", {
@@ -28,6 +29,20 @@ export class TripDayService {
       dayNumber,
     });
     await broadcastTripUpdate(tripId, "day:added", { dayId: day.id });
+
+    const otherMembers = trip.members.filter((m) => m.userId !== userId);
+    for (const member of otherMembers) {
+      await NotificationService.create({
+        userId: member.userId,
+        actorId: userId,
+        type: "day_created",
+        tripId,
+        title: `${day.title} added to "${trip.title}"`,
+        body: null,
+        data: null,
+      });
+    }
+
     return day;
   }
 

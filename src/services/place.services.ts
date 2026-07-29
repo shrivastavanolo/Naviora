@@ -1,6 +1,7 @@
 import { NotFoundError, ForbiddenError } from "@/src/lib/errors";
 import { PlaceRepository } from "@/src/repositories/place.repository";
 import { ActivityLogService } from "@/src/services/activity-log.services";
+import { NotificationService } from "@/src/services/notification.services";
 import { broadcastTripUpdate } from "@/lib/broadcast";
 import type { CreatePlaceInput, UpdatePlaceInput } from "@/src/schemas/place";
 import { TripRepository } from "../repositories/trip.repository";
@@ -50,6 +51,19 @@ export class PlaceService {
       name: data.name,
     });
     await broadcastTripUpdate(tripId, "place:added", { placeId: place.id });
+
+    const otherMembers = trip.members.filter((m) => m.userId !== userId);
+    for (const member of otherMembers) {
+      await NotificationService.create({
+        userId: member.userId,
+        actorId: userId,
+        type: "place_added",
+        tripId,
+        title: `${data.name} added to "${trip.title}"`,
+        body: null,
+        data: null,
+      });
+    }
 
     return place;
   }

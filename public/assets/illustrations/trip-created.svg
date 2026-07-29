@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <defs>
+    <linearGradient id="purple" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7C5CFF"/>
+      <stop offset="100%" stop-color="#9B8BFF"/>
+    </linearGradient>
+
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="100%" stop-color="#67E8F9"/>
+    </linearGradient>
+
+    <linearGradient id="emerald" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#6EE7B7"/>
+    </linearGradient>
+
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="10" stdDeviation="12"
+        flood-color="#000" flood-opacity=".18"/>
+    </filter>
+  </defs>
+
+  <!-- Floating itinerary card -->
+
+  <g filter="url(#shadow)">
+    <rect
+      x="105"
+      y="65"
+      width="190"
+      height="150"
+      rx="22"
+      fill="#171B2E"
+      stroke="url(#purple)"
+      stroke-width="2"/>
+
+    <!-- Title -->
+
+    <rect
+      x="135"
+      y="92"
+      width="85"
+      height="10"
+      rx="5"
+      fill="url(#purple)"/>
+
+    <!-- itinerary lines -->
+
+    <circle cx="145" cy="128" r="5" fill="url(#cyan)"/>
+    <line x1="160" y1="128" x2="245" y2="128"
+      stroke="#3B4263" stroke-width="4"
+      stroke-linecap="round"/>
+
+    <circle cx="145" cy="155" r="5" fill="url(#emerald)"/>
+    <line x1="160" y1="155" x2="235" y2="155"
+      stroke="#3B4263" stroke-width="4"
+      stroke-linecap="round"/>
+
+    <circle cx="145" cy="182" r="5" fill="url(#purple)"/>
+    <line x1="160" y1="182" x2="225" y2="182"
+      stroke="#3B4263" stroke-width="4"
+      stroke-linecap="round"/>
+  </g>
+
+  <!-- Map Pin -->
+
+  <g filter="url(#shadow)">
+    <path
+      d="M280 185
+         C290 185 298 193 298 203
+         C298 220 280 238 280 238
+         C280 238 262 220 262 203
+         C262 193 270 185 280 185Z"
+      fill="url(#purple)"/>
+
+    <circle
+      cx="280"
+      cy="203"
+      r="5"
+      fill="white"/>
+  </g>
+
+  <!-- Plus badge -->
+
+  <circle
+    cx="300"
+    cy="78"
+    r="18"
+    fill="url(#emerald)"
+    filter="url(#shadow)"/>
+
+  <path
+    d="M300 69
+       V87
+       M291 78
+       H309"
+    stroke="white"
+    stroke-width="3"
+    stroke-linecap="round"/>
+
+  <!-- Plane -->
+
+  <path
+    d="M72 168
+       L88 175
+       L79 178
+       L74 190
+       L70 178
+       L58 175Z"
+    fill="url(#cyan)"/>
+
+  <!-- Flight path -->
+
+  <path
+    d="M78 175
+       C105 150 140 155 175 145
+       S235 145 265 185"
+    stroke="url(#cyan)"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-dasharray="8 8"/>
+
+  <!-- Decorative sparkles -->
+
+  <path
+    d="M80 80
+       L84 88
+       L92 92
+       L84 96
+       L80 104
+       L76 96
+       L68 92
+       L76 88Z"
+    fill="url(#cyan)"
+    opacity=".45"/>
+
+  <path
+    d="M330 175
+       L334 183
+       L342 187
+       L334 191
+       L330 199
+       L326 191
+       L318 187
+       L326 183Z"
+    fill="url(#purple)"
+    opacity=".4"/>
+
+  <circle cx="70" cy="220" r="4" fill="#10B981" opacity=".25"/>
+  <circle cx="335" cy="110" r="4" fill="#22D3EE" opacity=".25"/>
+  <circle cx="115" cy="50" r="3" fill="#7C5CFF" opacity=".3"/>
+</svg>

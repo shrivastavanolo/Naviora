@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <defs>
+    <linearGradient id="grad-purple" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6D5EF5"/>
+      <stop offset="100%" stop-color="#8B7CF8"/>
+    </linearGradient>
+    <linearGradient id="grad-teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#6EE7B7"/>
+    </linearGradient>
+  </defs>
+
+  <path d="M80 220 L120 160 L160 190 L220 120 L280 170 L320 140" stroke="url(#grad-purple)" stroke-width="2" stroke-dasharray="6 6" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+
+  <circle cx="80" cy="220" r="12" fill="url(#grad-teal)" stroke="white" stroke-width="1.5"/>
+  <path d="M80 208 L80 214 M80 226 L80 232" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+
+  <circle cx="320" cy="140" r="10" fill="url(#grad-purple)" opacity="0.35" stroke="white" stroke-width="1" stroke-dasharray="3 3"/>
+  <path d="M320 128 L320 134 M320 146 L320 152" stroke="white" stroke-width="1" stroke-linecap="round" opacity="0.35" stroke-dasharray="2 2"/>
+
+  <circle cx="200" cy="80" r="6" fill="url(#grad-purple)" opacity="0.2"/>
+  <circle cx="100" cy="100" r="4" fill="url(#grad-teal)" opacity="0.15"/>
+  <circle cx="300" cy="90" r="5" fill="url(#grad-purple)" opacity="0.2"/>
+  <circle cx="260" cy="200" r="3" fill="url(#grad-teal)" opacity="0.15"/>
+  <circle cx="150" cy="240" r="4" fill="url(#grad-purple)" opacity="0.15"/>
+</svg>

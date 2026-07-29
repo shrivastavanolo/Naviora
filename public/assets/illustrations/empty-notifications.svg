@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <defs>
+    <linearGradient id="purple" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7C5CFF"/>
+      <stop offset="100%" stop-color="#9B8BFF"/>
+    </linearGradient>
+
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="100%" stop-color="#67E8F9"/>
+    </linearGradient>
+
+    <linearGradient id="emerald" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#6EE7B7"/>
+    </linearGradient>
+
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity=".18"/>
+    </filter>
+  </defs>
+
+  <!-- Bell -->
+
+  <g filter="url(#shadow)">
+    <path
+      d="M200 70
+         C165 70 145 96 145 132
+         V165
+         L130 185
+         H270
+         L255 165
+         V132
+         C255 96 235 70 200 70Z"
+      fill="#171B2E"
+      stroke="url(#purple)"
+      stroke-width="2"
+      stroke-linejoin="round"/>
+
+    <!-- Clapper -->
+    <circle
+      cx="200"
+      cy="191"
+      r="9"
+      fill="url(#purple)"/>
+
+    <!-- Bell base -->
+    <path
+      d="M182 205
+         C188 216 212 216 218 205"
+      stroke="url(#cyan)"
+      stroke-width="3"
+      stroke-linecap="round"/>
+  </g>
+
+  <!-- Notification Badge -->
+
+  <circle
+    cx="248"
+    cy="86"
+    r="16"
+    fill="url(#emerald)"
+    stroke="#0F172A"
+    stroke-width="4"/>
+
+  <path
+    d="M242 86
+       L247 91
+       L255 81"
+    stroke="white"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"/>
+
+  <!-- Sound waves -->
+
+  <path
+    d="M120 120
+       Q100 140 120 160"
+    stroke="url(#cyan)"
+    stroke-width="2"
+    stroke-linecap="round"
+    opacity=".5"/>
+
+  <path
+    d="M280 120
+       Q300 140 280 160"
+    stroke="url(#cyan)"
+    stroke-width="2"
+    stroke-linecap="round"
+    opacity=".5"/>
+
+  <!-- Floating dots -->
+
+  <circle cx="90" cy="70" r="4" fill="#22D3EE" opacity=".25"/>
+  <circle cx="315" cy="75" r="3" fill="#7C5CFF" opacity=".25"/>
+  <circle cx="80" cy="230" r="5" fill="#10B981" opacity=".18"/>
+  <circle cx="320" cy="220" r="5" fill="#7C5CFF" opacity=".18"/>
+
+  <!-- Sparkles -->
+
+  <path
+    d="M105 160
+       L109 168
+       L117 172
+       L109 176
+       L105 184
+       L101 176
+       L93 172
+       L101 168Z"
+    fill="url(#cyan)"
+    opacity=".5"/>
+
+  <path
+    d="M300 165
+       L304 173
+       L312 177
+       L304 181
+       L300 189
+       L296 181
+       L288 177
+       L296 173Z"
+    fill="url(#purple)"
+    opacity=".45"/>
+</svg>

@@ -51,67 +51,79 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-muted/30 px-4">
-      <div className="w-full max-w-md mb-4">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="size-4" />
-          Back to Home
-        </Link>
+    <main className="flex min-h-screen bg-muted/30">
+      <div className="hidden w-1/2 items-center justify-center bg-gradient-to-br from-primary/5 to-accent/5 lg:flex">
+        <img
+          src="/assets/illustrations/login-hero.svg"
+          alt="Login"
+          className="w-full"
+        />
       </div>
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Login to Naviora</CardTitle>
-        </CardHeader>
 
-        <CardContent>
-          <div className="space-y-5">
-            <GoogleButton />
+      <div className="flex w-full flex-col items-center justify-center px-4 lg:w-1/2">
+        <div className="w-full max-w-md mb-4">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="size-4" />
+            Back to Home
+          </Link>
+        </div>
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Login to Naviora</CardTitle>
+          </CardHeader>
 
-            <AuthDivider />
+          <CardContent>
+            <div className="space-y-5">
+              <GoogleButton />
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+              <AuthDivider />
 
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="john@example.com"
-                  {...register("email")}
-                />
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
 
-                {errors.email && (
-                  <p className="text-sm text-red-500">{errors.email.message}</p>
-                )}
-              </div>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="john@example.com"
+                    {...register("email")}
+                  />
 
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                  {errors.email && (
+                    <p className="text-sm text-red-500">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
 
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  {...register("password")}
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
 
-                {errors.password && (
-                  <p className="text-sm text-red-500">
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    {...register("password")}
+                  />
 
-              <Button type="submit" className="w-full" disabled={isPending}>
-                {isPending ? "Signing in..." : "Login"}
-              </Button>
-            </form>
-          </div>
-        </CardContent>
-      </Card>
+                  {errors.password && (
+                    <p className="text-sm text-red-500">
+                      {errors.password.message}
+                    </p>
+                  )}
+                </div>
+
+                <Button type="submit" className="w-full" disabled={isPending}>
+                  {isPending ? "Signing in..." : "Login"}
+                </Button>
+              </form>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </main>
   );
 }

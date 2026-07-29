@@ -8,11 +8,7 @@ import { queryClient } from "@/lib/query-client";
 import { AuthApi } from "@/client/auth";
 import { useMe } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
-import {
-  Avatar,
-  AvatarImage,
-  AvatarFallback,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -22,6 +18,7 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { EmailVerificationBanner } from "@/components/auth/email-verification-banner";
+import { NotificationDropdown } from "@/components/layout/notification-dropdown";
 
 export function Header() {
   const router = useRouter();
@@ -49,7 +46,7 @@ export function Header() {
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
         <Link href="/" className="flex items-center">
           <Image
-            src="/logo.svg"
+            src="/assets/brand/logo.svg"
             alt="Naviora"
             width={120}
             height={120}
@@ -59,8 +56,10 @@ export function Header() {
 
         <nav className="flex items-center gap-2">
           {isAuthenticated && user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            <>
+              <NotificationDropdown />
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 <Avatar>
                   {user.avatar ? (
                     <AvatarImage src={user.avatar} alt={user.name} />
@@ -89,6 +88,7 @@ export function Header() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            </>
           ) : (
             <>
               <Button

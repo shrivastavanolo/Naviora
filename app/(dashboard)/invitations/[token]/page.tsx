@@ -48,6 +48,11 @@ export default function InvitationPage() {
   if (error || !invitation) {
     return (
       <main className="mx-auto max-w-lg p-8 text-center">
+        <img
+          src="/assets/illustrations/empty-invite.svg"
+          alt="Invalid invitation"
+          className="mx-auto mb-6 size-44"
+        />
         <h1 className="text-2xl font-bold">Invitation not found</h1>
         <p className="mt-2 text-muted-foreground">
           This invitation link is invalid or has expired.
@@ -62,6 +67,11 @@ export default function InvitationPage() {
   if (!user) {
     return (
       <main className="mx-auto max-w-lg p-8 text-center">
+        <img
+          src="/assets/illustrations/empty-invite.svg"
+          alt="Sign in required"
+          className="mx-auto mb-6 size-44"
+        />
         <h1 className="text-2xl font-bold">Sign in to accept</h1>
         <p className="mt-2 text-muted-foreground">
           You need to sign in to accept this invitation.
@@ -79,6 +89,11 @@ export default function InvitationPage() {
   if (invitation.status !== "PENDING") {
     return (
       <main className="mx-auto max-w-lg p-8 text-center">
+        <img
+          src="/assets/illustrations/empty-invite.svg"
+          alt="Invitation processed"
+          className="mx-auto mb-6 size-44"
+        />
         <h1 className="text-2xl font-bold">Invitation {invitation.status.toLowerCase()}</h1>
         <p className="mt-2 text-muted-foreground">
           This invitation has already been {invitation.status.toLowerCase()}.

@@ -30,28 +30,39 @@ export function PlaceSearch({ onSelect }: Props) {
 
       {isLoading && <LoadingSpinner />}
 
-      <div className="rounded-md border">
-        {data?.map((place) => (
-          <button
-            key={place.id}
-            className="block w-full border-b p-3 text-left hover:bg-muted"
-            onClick={() => {
-              onSelect({
-                name: place.name,
-                address: place.address,
-                latitude: place.latitude,
-                longitude: place.longitude,
-              });
-              setQuery("");
-            }}
-          >
-            <div className="font-medium">{place.name}</div>
-            {place.address && (
-              <div className="text-sm text-muted-foreground">{place.address}</div>
-            )}
-          </button>
-        ))}
-      </div>
+      {query && data && data.length === 0 ? (
+        <div className="flex flex-col items-center py-8">
+          <img
+            src="/assets/illustrations/empty-search.svg"
+            alt="No results"
+            className="size-32"
+          />
+          <p className="mt-3 text-sm text-muted-foreground">No places found.</p>
+        </div>
+      ) : (
+        <div className="rounded-md border">
+          {data?.map((place) => (
+            <button
+              key={place.id}
+              className="block w-full border-b p-3 text-left hover:bg-muted"
+              onClick={() => {
+                onSelect({
+                  name: place.name,
+                  address: place.address,
+                  latitude: place.latitude,
+                  longitude: place.longitude,
+                });
+                setQuery("");
+              }}
+            >
+              <div className="font-medium">{place.name}</div>
+              {place.address && (
+                <div className="text-sm text-muted-foreground">{place.address}</div>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

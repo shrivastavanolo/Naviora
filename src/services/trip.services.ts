@@ -3,6 +3,7 @@ import { TripRepository } from "@/src/repositories/trip.repository";
 import { TripDayRepository } from "@/src/repositories/trip-day.repository";
 import { TripMemberRepository } from "@/src/repositories/trip-member.repository";
 import { ActivityLogService } from "@/src/services/activity-log.services";
+import { NotificationService } from "@/src/services/notification.services";
 import { broadcastTripUpdate } from "@/lib/broadcast";
 import type { CreateTripInput, UpdateTripInput } from "@/src/schemas/trip";
 
@@ -73,6 +74,20 @@ export class TripService {
       changes: Object.keys(data),
     });
     await broadcastTripUpdate(tripId, "trip:updated", {});
+
+    const otherMembers = trip.members.filter((m) => m.userId !== userId);
+    for (const member of otherMembers) {
+      await NotificationService.create({
+        userId: member.userId,
+        actorId: userId,
+        type: "trip_updated",
+        tripId,
+        title: `Trip "${trip.title}" was updated`,
+        body: null,
+        data: null,
+      });
+    }
+
     return updated;
   }
 
@@ -112,6 +127,16 @@ export class TripService {
     });
 
     await broadcastTripUpdate(tripId, "trip:updated", {});
+
+    await NotificationService.create({
+      userId: memberId,
+      actorId: userId,
+      type: "member_removed",
+      tripId,
+      title: `You were removed from "${trip.title}"`,
+      body: null,
+      data: null,
+    });
 
     return { success: true };
   }

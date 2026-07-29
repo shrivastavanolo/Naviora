@@ -1,12 +1,18 @@
 "use client";
 
+import { useMemo, useState } from "react";
+import { Search } from "lucide-react";
+
 import { useTrips } from "@/hooks/use-trips";
 import { TripCard } from "@/components/trip/trip-card";
 import { CreateTripDialog } from "@/components/trip/create-trip-dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import LoadingSpinner from "@/components/ui/spinner";
 
 export default function DashboardPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+
   const {
     data,
     isPending,
@@ -16,8 +22,21 @@ export default function DashboardPage() {
     isFetchingNextPage,
   } = useTrips();
 
-  const allTrips = data?.pages.flatMap((p) => p.trips) ?? [];
+  const allTrips = useMemo(
+    () => data?.pages.flatMap((p) => p.trips) ?? [],
+    [data]
+  );
   const total = data?.pages[0]?.total ?? 0;
+
+  const filteredTrips = useMemo(
+    () =>
+      searchQuery
+        ? allTrips.filter((t) =>
+            t.title.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+        : allTrips,
+    [allTrips, searchQuery]
+  );
 
   if (isPending) {
     return <LoadingSpinner />;
@@ -33,8 +52,8 @@ export default function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-8 px-6 py-10">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex items-center justify-between gap-4">
+        <div className="min-w-0">
           <h1 className="text-3xl font-bold tracking-tight text-foreground">
             Your Trips
           </h1>
@@ -44,37 +63,54 @@ export default function DashboardPage() {
               : "Plan and organize your next adventure."}
           </p>
         </div>
-        <CreateTripDialog />
+
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search trips..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="h-9 w-48 pl-9 text-sm"
+            />
+          </div>
+          <CreateTripDialog />
+        </div>
       </div>
 
       {!allTrips.length ? (
         <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border px-6 py-20">
-          <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-primary/10">
-            <svg
-              className="size-7 text-primary"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={1.5}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 4.5v15m7.5-7.5h-15"
-              />
-            </svg>
-          </div>
+          <img
+            src="/assets/illustrations/empty-trip.svg"
+            alt="No trips"
+            className="mb-4 size-40"
+          />
           <h2 className="text-lg font-semibold">No trips yet</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Create your first trip to get started.
           </p>
         </div>
       ) : (
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {allTrips.map((trip) => (
-            <TripCard key={trip.id} trip={trip} />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {filteredTrips.map((trip) => (
+              <TripCard key={trip.id} trip={trip} />
+            ))}
+          </div>
+
+          {searchQuery && !filteredTrips.length && (
+            <div className="flex flex-col items-center py-16">
+              <img
+                src="/assets/illustrations/empty-search.svg"
+                alt="No results"
+                className="size-36"
+              />
+              <p className="mt-4 text-sm text-muted-foreground">
+                No trips match &ldquo;{searchQuery}&rdquo;
+              </p>
+            </div>
+          )}
+        </>
       )}
 
       {hasNextPage && (

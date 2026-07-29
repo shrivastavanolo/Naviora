@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import LoadingSpinner from "@/components/ui/spinner";
 import { useMe } from "@/hooks/use-auth";
 
 export default function DashboardLayout({
@@ -23,8 +22,13 @@ export default function DashboardLayout({
 
   if (isPending) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <LoadingSpinner />
+      <div className="flex h-screen flex-col items-center justify-center gap-6">
+        <img
+          src="/assets/illustrations/loading-trip.svg"
+          alt="Loading"
+          className="size-48"
+        />
+        <p className="text-sm text-muted-foreground">Loading...</p>
       </div>
     );
   }

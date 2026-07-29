@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <defs>
+    <linearGradient id="purple" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7C5CFF"/>
+      <stop offset="100%" stop-color="#9B8BFF"/>
+    </linearGradient>
+
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="100%" stop-color="#67E8F9"/>
+    </linearGradient>
+
+    <linearGradient id="emerald" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#6EE7B7"/>
+    </linearGradient>
+
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity=".18"/>
+    </filter>
+  </defs>
+
+  <!-- Mountains -->
+
+  <path
+    d="M60 220L130 130L190 220Z"
+    fill="#171B2E"
+    stroke="url(#purple)"
+    stroke-width="2"/>
+
+  <path
+    d="M150 220L235 105L330 220Z"
+    fill="#1D2235"
+    stroke="url(#purple)"
+    stroke-width="2"/>
+
+  <!-- Completed route -->
+
+  <path
+    d="M90 205
+       C130 185 165 195 195 165
+       S255 130 285 145"
+    stroke="url(#cyan)"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-dasharray="8 8"/>
+
+  <!-- Start -->
+
+  <circle
+    cx="90"
+    cy="205"
+    r="8"
+    fill="#111827"
+    stroke="url(#purple)"
+    stroke-width="3"/>
+
+  <!-- Destination pin -->
+
+  <path
+    d="M285 128
+       C295 128 303 136 303 146
+       C303 162 285 178 285 178
+       C285 178 267 162 267 146
+       C267 136 275 128 285 128Z"
+    fill="url(#purple)"
+    filter="url(#shadow)"/>
+
+  <circle
+    cx="285"
+    cy="146"
+    r="5"
+    fill="white"/>
+
+  <!-- Success badge -->
+
+  <circle
+    cx="320"
+    cy="95"
+    r="18"
+    fill="url(#emerald)"
+    filter="url(#shadow)"/>
+
+  <path
+    d="M312 95
+       L318 101
+       L329 89"
+    stroke="white"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"/>
+
+  <!-- Plane -->
+
+  <path
+    d="M240 125
+       L252 131
+       L245 133
+       L241 144
+       L237 133
+       L229 131Z"
+    fill="url(#cyan)"/>
+
+  <!-- Sparkles -->
+
+  <path
+    d="M90 85
+       L94 93
+       L102 97
+       L94 101
+       L90 109
+       L86 101
+       L78 97
+       L86 93Z"
+    fill="url(#cyan)"
+    opacity=".5"/>
+
+  <path
+    d="M330 180
+       L334 188
+       L342 192
+       L334 196
+       L330 204
+       L326 196
+       L318 192
+       L326 188Z"
+    fill="url(#purple)"
+    opacity=".45"/>
+
+  <!-- Confetti -->
+
+  <circle cx="65" cy="120" r="4" fill="#10B981" opacity=".3"/>
+  <circle cx="335" cy="70" r="3" fill="#22D3EE" opacity=".35"/>
+  <circle cx="350" cy="145" r="4" fill="#7C5CFF" opacity=".25"/>
+  <circle cx="120" cy="70" r="3" fill="#10B981" opacity=".25"/>
+</svg>

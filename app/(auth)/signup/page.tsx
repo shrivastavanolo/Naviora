@@ -51,71 +51,89 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-muted/30 px-4">
-      <div className="w-full max-w-md mb-4">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="size-4" />
-          Back to Home
-        </Link>
+    <main className="flex min-h-screen bg-muted/30">
+      <div className="hidden w-1/2 items-center justify-center bg-gradient-to-br from-primary/5 to-accent/5 lg:flex">
+        <img
+          src="/assets/illustrations/register-hero.svg"
+          alt="Sign up"
+          className="w-full"
+        />
       </div>
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Create your account</CardTitle>
-        </CardHeader>
 
-        <CardContent>
-          <div className="space-y-5">
-            <GoogleButton />
+      <div className="flex w-full flex-col items-center justify-center px-4 lg:w-1/2">
+        <div className="w-full max-w-md mb-4">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="size-4" />
+            Back to Home
+          </Link>
+        </div>
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Create your account</CardTitle>
+          </CardHeader>
 
-            <AuthDivider />
+          <CardContent>
+            <div className="space-y-5">
+              <GoogleButton />
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" placeholder="John Doe" {...register("name")} />
-                {errors.name && (
-                  <p className="text-sm text-red-500">{errors.name.message}</p>
-                )}
-              </div>
+              <AuthDivider />
 
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="john@example.com"
-                  {...register("email")}
-                />
-                {errors.email && (
-                  <p className="text-sm text-red-500">{errors.email.message}</p>
-                )}
-              </div>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Name</Label>
+                  <Input
+                    id="name"
+                    placeholder="John Doe"
+                    {...register("name")}
+                  />
+                  {errors.name && (
+                    <p className="text-sm text-red-500">
+                      {errors.name.message}
+                    </p>
+                  )}
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  {...register("password")}
-                />
-                {errors.password && (
-                  <p className="text-sm text-red-500">
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="john@example.com"
+                    {...register("email")}
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-red-500">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
 
-              <Button type="submit" className="w-full" disabled={isPending}>
-                {isPending ? "Creating account..." : "Create Account"}
-              </Button>
-            </form>
-          </div>
-        </CardContent>
-      </Card>
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    {...register("password")}
+                  />
+                  {errors.password && (
+                    <p className="text-sm text-red-500">
+                      {errors.password.message}
+                    </p>
+                  )}
+                </div>
+
+                <Button type="submit" className="w-full" disabled={isPending}>
+                  {isPending ? "Creating account..." : "Create Account"}
+                </Button>
+              </form>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </main>
   );
 }

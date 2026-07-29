@@ -11,3 +11,16 @@ export async function broadcastTripUpdate(
     console.error("Pusher broadcast error:", err);
   }
 }
+
+export async function broadcastUserNotification(
+  userId: string,
+  notification: Record<string, unknown>
+) {
+  try {
+    await pusher.trigger(`notification-${userId}`, "notification:new", {
+      notification,
+    });
+  } catch (err) {
+    console.error("Pusher user notification error:", err);
+  }
+}

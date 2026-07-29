@@ -50,14 +50,19 @@ export function CreateTripDialog() {
     },
   });
 
+  const [showSuccess, setShowSuccess] = useState(false);
+
   const onSubmit: SubmitHandler<CreateTripInput> = (values) => {
     mutate(values, {
       onSuccess: (trip: Trip) => {
-        toast.success("Trip created successfully!");
+        setShowSuccess(true);
 
-        reset();
-        setOpen(false);
-        router.push(`/trips/${trip.id}`);
+        setTimeout(() => {
+          reset();
+          setOpen(false);
+          setShowSuccess(false);
+          router.push(`/trips/${trip.id}`);
+        }, 1500);
       },
 
       onError: (error: Error) => {
@@ -71,65 +76,81 @@ export function CreateTripDialog() {
       <DialogTrigger render={<Button />}>+ New Trip</DialogTrigger>
 
       <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Create Trip</DialogTitle>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
-
-            <Input id="title" placeholder="Japan 2027" {...register("title")} />
-
-            {errors.title && (
-              <p className="text-sm text-red-500">{errors.title.message}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-
-            <Textarea
-              id="description"
-              placeholder="Cherry blossom trip..."
-              {...register("description")}
+        {showSuccess ? (
+          <div className="flex flex-col items-center py-8">
+            <img
+              src="/assets/illustrations/trip-created.svg"
+              alt="Trip created"
+              className="size-44"
             />
-
-            {errors.description && (
-              <p className="text-sm text-red-500">
-                {errors.description.message}
-              </p>
-            )}
+            <p className="mt-4 text-lg font-semibold">Trip created!</p>
+            <p className="text-sm text-muted-foreground">
+              Redirecting to your trip...
+            </p>
           </div>
+        ) : (
+          <>
+            <DialogHeader>
+              <DialogTitle>Create Trip</DialogTitle>
+            </DialogHeader>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="startDate">Start Date</Label>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="title">Title</Label>
 
-              <Input id="startDate" type="date" {...register("startDate")} />
+                <Input id="title" placeholder="Japan 2027" {...register("title")} />
 
-              {errors.startDate && (
-                <p className="text-sm text-red-500">
-                  {errors.startDate.message}
-                </p>
-              )}
-            </div>
+                {errors.title && (
+                  <p className="text-sm text-red-500">{errors.title.message}</p>
+                )}
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="endDate">End Date</Label>
+              <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
 
-              <Input id="endDate" type="date" {...register("endDate")} />
+                <Textarea
+                  id="description"
+                  placeholder="Cherry blossom trip..."
+                  {...register("description")}
+                />
 
-              {errors.endDate && (
-                <p className="text-sm text-red-500">{errors.endDate.message}</p>
-              )}
-            </div>
-          </div>
+                {errors.description && (
+                  <p className="text-sm text-red-500">
+                    {errors.description.message}
+                  </p>
+                )}
+              </div>
 
-          <Button type="submit" className="w-full" disabled={isPending}>
-            {isPending ? "Creating..." : "Create Trip"}
-          </Button>
-        </form>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="startDate">Start Date</Label>
+
+                  <Input id="startDate" type="date" {...register("startDate")} />
+
+                  {errors.startDate && (
+                    <p className="text-sm text-red-500">
+                      {errors.startDate.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="endDate">End Date</Label>
+
+                  <Input id="endDate" type="date" {...register("endDate")} />
+
+                  {errors.endDate && (
+                    <p className="text-sm text-red-500">{errors.endDate.message}</p>
+                  )}
+                </div>
+              </div>
+
+              <Button type="submit" className="w-full" disabled={isPending}>
+                {isPending ? "Creating..." : "Create Trip"}
+              </Button>
+            </form>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

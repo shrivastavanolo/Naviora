@@ -2,6 +2,7 @@ import { NotFoundError, ForbiddenError, BadRequestError, ConflictError } from "@
 import { TripRepository } from "@/src/repositories/trip.repository";
 import { InvitationRepository } from "@/src/repositories/invitation.repository";
 import { ActivityLogService } from "@/src/services/activity-log.services";
+import { NotificationService } from "@/src/services/notification.services";
 import { prisma } from "@/src/lib/prisma";
 
 const INVITATION_ORIGIN = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
@@ -93,6 +94,16 @@ export class InvitationService {
     await ActivityLogService.log(invitation.tripId, userId, "member_joined", {
       userName: user.name,
       email: user.email,
+    });
+
+    await NotificationService.create({
+      userId: invitation.inviterId,
+      actorId: userId,
+      type: "member_joined",
+      tripId: invitation.tripId,
+      title: `${user.name} joined "${invitation.trip?.title ?? "the trip"}"`,
+      body: null,
+      data: null,
     });
 
     return { ...invitation, member };

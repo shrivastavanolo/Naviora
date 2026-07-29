@@ -38,9 +38,14 @@ export default function ActivityLog({ tripId }: ActivityLogProps) {
 
   if (!logs.length) {
     return (
-      <p className="py-8 text-center text-sm text-muted-foreground">
-        No activity yet.
-      </p>
+      <div className="flex flex-col items-center py-8">
+        <img
+          src="/assets/illustrations/empty-notifications.svg"
+          alt="No activity"
+          className="size-36"
+        />
+        <p className="mt-4 text-sm text-muted-foreground">No activity yet.</p>
+      </div>
     );
   }
 

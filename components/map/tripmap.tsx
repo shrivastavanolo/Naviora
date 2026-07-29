@@ -93,7 +93,17 @@ export default function TripMap({ tripId, places: propPlaces, isLoading: propLoa
     return <LoadingSpinner />;
   }
 
-  if (!orderedPlaces.length) return null;
+  if (!orderedPlaces.length) {
+    return (
+      <div className="flex h-125 w-full items-center justify-center rounded-xl bg-muted/30">
+        <img
+          src="/assets/illustrations/empty-map.svg"
+          alt="No places"
+          className="size-48"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="h-125 w-full rounded-xl overflow-hidden">

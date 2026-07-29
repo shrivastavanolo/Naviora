@@ -15,7 +15,6 @@ import { useDays, useCreateDay } from "@/hooks/use-trip-days";
 import { useTripChannel } from "@/hooks/use-trip-channel";
 import { Button } from "@/components/ui/button";
 import { CreatePlaceDialog } from "@/components/place/create-place-dialog";
-import LoadingSpinner from "@/components/ui/spinner";
 
 export default function TripPage() {
   const router = useRouter();
@@ -50,7 +49,16 @@ export default function TripPage() {
   }, [createDayMutation]);
 
   if (tripLoading || daysLoading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="flex h-screen flex-col items-center justify-center gap-6">
+        <img
+          src="/assets/illustrations/loading-trip.svg"
+          alt="Loading"
+          className="size-48"
+        />
+        <p className="text-sm text-muted-foreground">Loading trip...</p>
+      </div>
+    );
   }
 
   if (!trip) {
