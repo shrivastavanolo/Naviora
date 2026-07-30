@@ -2,10 +2,11 @@
 
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import { useCallback, useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
+import { ArrowLeft, Maximize2 } from "lucide-react";
 
 import TripMap from "@/components/map/tripmap";
+import type { TripMapHandle } from "@/components/map/tripmap";
 import DayTabs from "@/components/trip/day-tabs";
 import DayPanel from "@/components/trip/day-panel";
 import MemberList from "@/components/trip/member-list";
@@ -26,6 +27,8 @@ export default function TripPage() {
   const createDayMutation = useCreateDay(id);
 
   useTripChannel(id);
+
+  const mapRef = useRef<TripMapHandle>(null);
 
   const [activeDayId, setActiveDayId] = useState<string | null>(null);
 
@@ -80,7 +83,18 @@ export default function TripPage() {
           Back to Dashboard
         </Button>
         <h1 className="text-2xl font-bold sm:text-4xl">{trip.title}</h1>
-        <TripMap tripId={trip.id} places={activeDay?.places ?? []} />
+        <div className="relative">
+          <TripMap ref={mapRef} tripId={trip.id} places={activeDay?.places ?? []} />
+          <Button
+            variant="secondary"
+            size="icon"
+            className="absolute top-3 right-3 z-10 size-8 shadow"
+            onClick={() => mapRef.current?.resetView()}
+            title="Reset map view"
+          >
+            <Maximize2 className="size-3.5" />
+          </Button>
+        </div>
         {trip.description && (
           <p className="mt-3 text-muted-foreground">{trip.description}</p>
         )}

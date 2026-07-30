@@ -1,7 +1,14 @@
 "use client";
 
 import mapboxgl from "mapbox-gl";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Map, { Marker, Popup, Source, Layer } from "react-map-gl/mapbox";
 import type { MapRef } from "react-map-gl/mapbox";
 import type { Feature, LineString, FeatureCollection, Point } from "geojson";
@@ -14,17 +21,20 @@ import { usePlaces } from "@/hooks/use-places";
 import type { Place } from "@/src/types/place";
 import LoadingSpinner from "../ui/spinner";
 
+export interface TripMapHandle {
+  resetView: () => void;
+}
+
 interface Props {
   tripId: string;
   places?: Place[];
   isLoading?: boolean;
 }
 
-export default function TripMap({
-  tripId,
-  places: propPlaces,
-  isLoading: propLoading,
-}: Props) {
+const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
+  { tripId, places: propPlaces, isLoading: propLoading },
+  ref
+) {
   const mapRef = useRef<MapRef>(null);
   const { data: fetchedPlaces = [], isLoading: fetching } = usePlaces(tripId);
   const places = propPlaces ?? fetchedPlaces;
@@ -80,6 +90,15 @@ export default function TripMap({
   };
 
   useEffect(() => {
+    fitBounds();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orderedPlaces]);
+
+  useImperativeHandle(ref, () => ({
+    resetView: fitBounds,
+  }));
+
+  function fitBounds() {
     if (!mapRef.current || !orderedPlaces.length) return;
 
     const bounds = new mapboxgl.LngLatBounds();
@@ -92,7 +111,7 @@ export default function TripMap({
       padding: 80,
       duration: 1000,
     });
-  }, [orderedPlaces]);
+  }
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -205,4 +224,6 @@ export default function TripMap({
       </Map>
     </div>
   );
-}
+});
+
+export default TripMap;
