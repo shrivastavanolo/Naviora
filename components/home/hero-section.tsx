@@ -26,13 +26,14 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut" as const }}
-          className="bg-linear-to-r from-accent via-primary to-secondary bg-clip-text text-5xl font-bold tracking-tight text-transparent sm:text-7xl"
+          className="bg-linear-to-r from-accent via-primary to-secondary bg-clip-text font-bold tracking-tight text-transparent"
         >
           <Image
             src="/assets/brand/logo.svg"
             alt="Naviora"
-            width={300}
-            height={200}
+            width={240}
+            height={160}
+            className="h-auto w-[200px] sm:w-[300px]"
           />
         </motion.h1>
         <motion.p

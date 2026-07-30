@@ -13,7 +13,7 @@ const reveal = {
 
 export function PurposeSection() {
   return (
-    <section className="relative flex items-center justify-center border-t border-border/50 px-6 py-28 overflow-hidden">
+    <section className="relative flex items-center justify-center border-t border-border/50 px-4 py-16 sm:px-6 sm:py-28 overflow-hidden">
       <div
         className="absolute inset-0 -z-10 bg-cover bg-fixed bg-center opacity-[0.3]"
         style={{ backgroundImage: "url(/assets/background/bg.png)" }}
@@ -29,7 +29,7 @@ export function PurposeSection() {
         <span className="rounded-full border border-accent/30 bg-accent/10 px-4 py-1 text-xs font-medium tracking-wider text-accent uppercase">
           Purpose
         </span>
-        <p className="text-lg leading-relaxed text-muted-foreground sm:text-xl">
+        <p className="text-base leading-relaxed text-muted-foreground sm:text-lg sm:text-xl">
           Naviora helps users collaboratively plan trips, optimize multi-stop
           itineraries, and manage travel in real time.
         </p>

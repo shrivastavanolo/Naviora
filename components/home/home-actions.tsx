@@ -20,26 +20,28 @@ export function HomeActions() {
 
   if (isAuthenticated) {
     return (
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
         <Link href="/dashboard">
-          <Button size="lg" variant="accent" className="min-w-30">
+          <Button size="lg" variant="accent" className="w-full min-w-30">
             Dashboard
           </Button>
         </Link>
-        <CreateTripDialog />
+        <div className="sm:w-auto">
+          <CreateTripDialog />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
       <Link href="/signup">
-        <Button size="lg" variant="accent" className="min-w-30">
+        <Button size="lg" variant="accent" className="w-full min-w-30">
           Get Started
         </Button>
       </Link>
       <Link href="/login">
-        <Button variant="outline" size="lg" className="min-w-30">
+        <Button variant="outline" size="lg" className="w-full min-w-30">
           Login
         </Button>
       </Link>

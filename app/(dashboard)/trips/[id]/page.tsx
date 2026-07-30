@@ -68,7 +68,7 @@ export default function TripPage() {
   }
 
   return (
-    <main className="mx-auto max-w-5xl space-y-8 p-8">
+    <main className="mx-auto max-w-5xl space-y-6 p-4 sm:space-y-8 sm:p-8">
       <section>
         <Button
           variant="ghost"
@@ -79,7 +79,7 @@ export default function TripPage() {
           <ArrowLeft className="size-4" />
           Back to Dashboard
         </Button>
-        <h1 className="text-4xl font-bold">{trip.title}</h1>
+        <h1 className="text-2xl font-bold sm:text-4xl">{trip.title}</h1>
         <TripMap tripId={trip.id} places={activeDay?.places ?? []} />
         {trip.description && (
           <p className="mt-3 text-muted-foreground">{trip.description}</p>
@@ -93,7 +93,7 @@ export default function TripPage() {
         )}
       </section>
 
-      <div className="flex gap-8">
+      <div className="flex flex-col gap-8 lg:flex-row">
         <div className="flex-1 min-w-0 space-y-8">
           <section>
             <DayTabs
@@ -107,8 +107,8 @@ export default function TripPage() {
 
           {activeDay ? (
             <section>
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-2xl font-semibold">
+              <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <h2 className="text-xl font-semibold sm:text-2xl">
                   {activeDay.title ?? `Day ${activeDay.dayNumber}`}
                 </h2>
                 <div className="flex items-center gap-2">
@@ -143,7 +143,7 @@ export default function TripPage() {
           )}
         </div>
 
-        <aside className="w-72 shrink-0 space-y-6">
+        <aside className="w-full shrink-0 space-y-6 lg:w-72">
           <MemberList trip={trip} />
           <ActivityLog tripId={id} />
         </aside>

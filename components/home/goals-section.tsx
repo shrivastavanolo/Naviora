@@ -45,8 +45,8 @@ const features = [
 
 export function GoalsSection() {
   return (
-    <section className="flex items-center justify-center border-t border-border/50 px-6 py-28">
-      <div className="flex w-full max-w-5xl flex-col items-center gap-16 lg:flex-row">
+    <section className="flex items-center justify-center border-t border-border/50 px-4 py-16 sm:px-6 sm:py-28">
+      <div className="flex w-full max-w-5xl flex-col items-center gap-10 sm:gap-16 lg:flex-row">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -111,7 +111,7 @@ export function GoalsSection() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="relative flex-1"
+          className="relative w-full flex-1"
           style={{ height: 500 }}
         >
           <div className="hidden lg:block">
@@ -131,7 +131,7 @@ export function GoalsSection() {
               ))}
             </CardSwap>
           </div>
-          <div className="grid h-full grid-cols-2 content-center gap-3 lg:hidden">
+          <div className="grid h-full grid-cols-1 sm:grid-cols-2 content-center gap-3 lg:hidden">
             {features.map((f) => (
               <div
                 key={f.title}
